@@ -15,8 +15,9 @@ namespace WpfSeaBattle
         {
             switch((int)value)
             {
-                case 0: return Brushes.LightBlue;
-                case 1: return Brushes.White;
+                case 0: return Brushes.LightBlue;   //water
+                case 1: return Brushes.White;       //Ship
+                case 2: return Brushes.LightCoral;  //Miss
             }
             throw new NotImplementedException();
         }
