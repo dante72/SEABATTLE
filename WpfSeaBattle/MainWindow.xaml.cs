@@ -30,7 +30,7 @@ namespace WpfSeaBattle
             CreateFieldView(battleField2, field1, true);
         }
 
-        static private void CreateFieldView(WrapPanel wp, Field field, bool FogOfWar = false)
+        static private void CreateFieldView(WrapPanel wp, Field field, bool fogOfWar = false)
         {
             for (int i = 0; i < field.VerticalItemsCount; i++)
                 for (int j = 0; j < field.HorizontalItemsCount; j++)
@@ -39,7 +39,7 @@ namespace WpfSeaBattle
                     {
                         Width = wp.Height / field.VerticalItemsCount,
                         Height = wp.Width / field.HorizontalItemsCount,
-                        IsChecked = FogOfWar
+                        IsChecked = fogOfWar
                     });
                 }
 
