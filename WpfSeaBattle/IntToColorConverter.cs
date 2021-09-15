@@ -9,15 +9,24 @@ using System.Windows.Media;
 
 namespace WpfSeaBattle
 {
+    enum Textures
+    {
+        Ship,
+        Water,
+        Destroyed,
+        Miss
+    }
     public class IntToColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            switch((int)value)
+            switch ((Textures)value)
             {
-                case 0: return Brushes.LightBlue;   //water
-                case 1: return Brushes.White;       //Ship
-                case 2: return Brushes.LightCoral;  //Miss
+
+                case Textures.Ship: return Brushes.White;
+                case Textures.Miss: return Brushes.LightCoral;
+                case Textures.Destroyed: return Brushes.DarkGray;
+                default: return Brushes.LightBlue;
             }
             throw new NotImplementedException();
         }

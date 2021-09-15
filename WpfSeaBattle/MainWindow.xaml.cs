@@ -35,20 +35,23 @@ namespace WpfSeaBattle
             for (int i = 0; i < field.VerticalItemsCount; i++)
                 for (int j = 0; j < field.HorizontalItemsCount; j++)
                 {
-                    wp.Children.Add(new ToggleButton()
-                    {
-                        Width = wp.Height / field.VerticalItemsCount,
-                        Height = wp.Width / field.HorizontalItemsCount,
-                        IsChecked = fogOfWar
-                    });
-                }
+                    var button = new ToggleButton();
 
-            for (int i = 0; i < field.VerticalItemsCount; i++)
-                for (int j = 0; j < field.HorizontalItemsCount; j++)
-                {
-                    (wp.Children[i * field.VerticalItemsCount + j] as ToggleButton)
-                        .DataContext = field[i, j];
+                    button.Width = wp.Height / field.VerticalItemsCount;
+                    button.Height = wp.Width / field.HorizontalItemsCount;
+                    button.IsChecked = fogOfWar;
+                    button.DataContext = field[i, j];
+                    button.Click += Button_Click;
+
+                    wp.Children.Add(button);
                 }
+        }
+
+        private static void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var button = e.Source as ToggleButton;
+            var point = button.DataContext as Point;
+            point.Shoot();
         }
     }
 }
