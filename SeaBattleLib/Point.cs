@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WpfSeaBattle
+namespace SeaBattleLib
 {
     public class Point : INotifyPropertyChanged
     {
@@ -18,8 +18,8 @@ namespace WpfSeaBattle
             }
         }
 
-        public int X { set; get; }
-        public int Y { set; get; }
+        public int X { private set; get; }
+        public int Y { private set; get; }
 
         int _value;
         public int Value {
