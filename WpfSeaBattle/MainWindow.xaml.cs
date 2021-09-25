@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SeaBattleLib;
 
 namespace WpfSeaBattle
 {
@@ -50,7 +51,7 @@ namespace WpfSeaBattle
         private static void Button_Click(object sender, RoutedEventArgs e)
         {
             var button = e.Source as ToggleButton;
-            var point = button.DataContext as Point;
+            var point = button.DataContext as SeaBattleLib.Point;
             point.Shoot();
         }
     }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WpfSeaBattle
+namespace SeaBattleLib
 {
     public static class PointExtension
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WpfSeaBattle
+namespace SeaBattleLib
 {
     public class Field
     {
@@ -21,10 +21,12 @@ namespace WpfSeaBattle
             mass = new Point[verticalItemsCount, horizontalItemsCount];
             for (int i = 0; i < verticalItemsCount; i++)
                 for (int j = 0; j < horizontalItemsCount; j++)
-                    mass[i, j] = new Point();
+                    mass[i, j] = new Point(i, j);
 
             ships.Add(new Ship(new Point(1, 1), 4, Orientation.Vertical));
-            ships.ForEach(ship => ship.Area.ForEach(p => mass[p.X, p.Y].Value = p.Value));
+
+
+            //ships.ForEach(ship => ship.Area.ForEach(p => mass[p.X, p.Y].Value = p.Value));
             ships.ForEach(ship => ship.Location.ForEach(p => mass[p.X, p.Y].Value = p.Value));
 
         }
