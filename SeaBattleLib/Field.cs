@@ -8,7 +8,7 @@ namespace SeaBattleLib {
     public class Field {
         private Cell[,] _points;
 
-        List<Ship> ships = new List<Ship>();
+        public List<Ship> Ships { get; } = new List<Ship>();
         public int VerticalItemsCount { get; }
         public int HorizontalItemsCount { get; }
         public Field(int verticalItemsCount, int horizontalItemsCount) {
@@ -20,11 +20,11 @@ namespace SeaBattleLib {
                 for (int j = 0; j < horizontalItemsCount; j++)
                     _points[i, j] = new Cell(i, j, Textures.Water);
 
-            ships.Add(new Ship(new Cell(1, 1, Textures.Ship), 4, Orientation.Vertical));
+            Ships.Add(new Ship(new Cell(1, 1, Textures.Ship), 4, Orientation.Vertical));
 
 
             //ships.ForEach(ship => ship.Area.ForEach(p => points[p.X, p.Y].Texture = p.Texture));
-            ships.ForEach(ship => ship.Location.ForEach(p => _points[p.X, p.Y].Texture = p.Texture));
+            Ships.ForEach(ship => ship.Location.ForEach(p => _points[p.X, p.Y].Texture = p.Texture));
 
         }
 
