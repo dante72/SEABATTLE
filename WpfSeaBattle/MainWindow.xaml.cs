@@ -27,7 +27,7 @@ namespace WpfSeaBattle {
         private string _name;
         private GameStatus _gameStatus;
         private string _chatMessage;
-        private IList<Ship> _ships;
+        
 
         public Field FieldWithShips { get; }
         public Field FieldWithShots { get; }
@@ -99,7 +99,9 @@ namespace WpfSeaBattle {
 
                         BinaryFormatter formatterOut = new BinaryFormatter();
                         MemoryStream stream = new MemoryStream(buffer);
-                        _ships = (List<Ship>)formatterOut.Deserialize(stream);
+                        foreach (var ship in (List<Ship>)formatterOut.Deserialize(stream)) {
+                            FieldWithShips.Ships.Add(ship);
+                        }
 
                     }
                     else if (message == Message.GameStatus) {
