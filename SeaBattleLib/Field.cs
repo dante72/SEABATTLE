@@ -11,7 +11,7 @@ namespace SeaBattleLib {
         public List<Ship> Ships { get; } = new List<Ship>();
         public int VerticalItemsCount { get; }
         public int HorizontalItemsCount { get; }
-        public Field(int verticalItemsCount, int horizontalItemsCount, List<Ship> ships = null) {
+        public Field(int verticalItemsCount, int horizontalItemsCount) {
             VerticalItemsCount = verticalItemsCount;
             HorizontalItemsCount = horizontalItemsCount;
 
@@ -19,9 +19,6 @@ namespace SeaBattleLib {
             for (int i = 0; i < verticalItemsCount; i++)
                 for (int j = 0; j < horizontalItemsCount; j++)
                     _points[i, j] = new Cell(i, j, Textures.Water);
-
-            if (ships != null)
-                Ships = ships;
 
             Ships.Add(new Ship(new Cell(1, 1, Textures.Ship), 4, Orientation.Vertical));
 
