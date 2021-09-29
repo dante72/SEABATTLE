@@ -32,12 +32,16 @@ namespace WpfSeaBattle {
         public Field FieldWithShips { get; }
         public Field FieldWithShots { get; }
 
+        private Field field;
+        private Field enemyField;
+
         public MainWindow() {
             InitializeComponent();
 
-            var field1 = new Field(10, 10);
-            CreateFieldView(battleField1, field1);
-            CreateFieldView(battleField2, field1, true);
+            field = new Field(10, 10);
+            enemyField = new Field(10, 10);
+            CreateFieldView(battleField1, field);
+            CreateFieldView(battleField2, enemyField, true);
         }
 
         static private void CreateFieldView(WrapPanel wp, Field field, bool fogOfWar = false) {
