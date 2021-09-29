@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfSeaBattle"
         mc:Ignorable="d"
-        Title="MainWindow" Height="550" Width="900">
+        Title="MainWindow" Height="550" Width="900"
+        Loaded="Window_Loaded">
     <Window.Resources>
         
         <local:IntToColorConverter x:Key="colorConverter"/>
@@ -29,7 +30,7 @@
                             </Trigger>
 
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter Property="Background" Value="{Binding Converter={StaticResource colorConverter}, Path=Value}"/>
+                                <Setter Property="Background" Value="{Binding Converter={StaticResource colorConverter}, Path=Texture}"/>
                             </Trigger>
 
                             <Trigger Property="IsChecked" Value="True">
