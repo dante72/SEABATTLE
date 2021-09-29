@@ -73,7 +73,7 @@ namespace Server
                 try
                 {
                     int messageCode = -1;
-                    player.GetStream().Read(buff, 0, buff.Length);
+                    player.GetStream().Read(buff, 0, buff.Length); // тут остановился
 
                 }
                 catch { }
