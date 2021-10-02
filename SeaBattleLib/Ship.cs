@@ -14,7 +14,8 @@ namespace SeaBattleLib {
         public bool IsDestroyed { get; set; } = false;
 
 
-        public Ship(Cell head, int partCount = 1, Orientation orientation = Orientation.Horizontal) {
+        public Ship(Cell head, int partCount = 1, Orientation orientation = Orientation.Horizontal, int X = 10, int Y = 10)
+        {
             for (int i = 0; i < partCount; i++)
                 Location.Add(new Cell(
                                         head.X + (orientation == Orientation.Vertical ? i : 0),
@@ -23,11 +24,18 @@ namespace SeaBattleLib {
                                        )
                             );
             for (int i = head.X - 1; i < head.X + (orientation == Orientation.Vertical ? partCount : 1) + 1; i++)
-                for (int j = head.Y - 1; j < head.Y + (orientation == Orientation.Horizontal ? partCount : 1) + 1; j++) {
+                for (int j = head.Y - 1; j < head.Y + (orientation == Orientation.Horizontal ? partCount : 1) + 1; j++)
+                {
                     var point = new Cell(i, j, Textures.Miss);
                     if (!Location.Any(x => x == point))
-                        Area.Add(point);
+                        if ((point.X >= 0 && point.X < X) && (point.Y >= 0 && point.Y < Y))
+                            Area.Add(point);
                 }
         }
+
+        private static Random Random { get; } = new Random();
+        public static Ship GenerateRandomShip(int verticalItemsCount, int horizontalItemsCount, int partCount = 1) =>
+            new Ship(new Cell(Random.Next(horizontalItemsCount), Random.Next(verticalItemsCount)),
+                partCount, (Orientation)Random.Next(Enum.GetValues<Orientation>().Length));
     }
 }

@@ -25,7 +25,7 @@ namespace SeaBattleLib {
             }
         }
 
-        public Cell(int x, int y, Textures texture) {
+        public Cell(int x, int y, Textures texture = Textures.Water) {
             X = x;
             Y = y;
             Texture = texture;
