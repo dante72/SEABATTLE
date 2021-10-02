@@ -44,10 +44,10 @@ namespace SeaBattleServer {
             //    return;
             //}
 
-            TcpListener listener = new TcpListener(IPAddress.Parse(_ipAddress), _port);
-            Title = $"IP = {_ipAddress} Port = {_port}";
-            listener.Start();
-            ServeClients(listener);
+            //TcpListener listener = new TcpListener(IPAddress.Parse(_ipAddress), _port);
+            //Title = $"IP = {_ipAddress} Port = {_port}";
+            //listener.Start();
+            //ServeClients(listener);
         }
 
         private async void ServeClients(TcpListener listener) {

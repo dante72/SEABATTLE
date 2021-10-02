@@ -35,7 +35,11 @@ namespace SeaBattleLib {
         }
 
 
-
+        
+        
+        
+        
+        
         private static Random Random { get; } = new Random();
         public static Ship GenerateRandomShip(int verticalItemsCount, int horizontalItemsCount, int partCount = 1) =>
             new Ship(new Cell(Random.Next(horizontalItemsCount), Random.Next(verticalItemsCount)),
