@@ -24,9 +24,10 @@ namespace WpfSeaBattle {
         private TcpClient _server;
         private string _ipAddress;
         private int _port;
-        private string _name;
+        private PlayerWalks _playerWalks;
+        //private string _name;
         private GameStatus _gameStatus;
-        private string _chatMessage;
+        //private string _chatMessage;
         
 
         public Field FieldWithShips { get; }
@@ -65,7 +66,7 @@ namespace WpfSeaBattle {
             while (true) {
                 ConnectionWindow dialog = new ConnectionWindow();
                 if (dialog.ShowDialog() == true) {
-                    _name = dialog.PlayerName;
+                    //_name = dialog.PlayerName;
                     _ipAddress = dialog.IpAddress;
                     _port = dialog.Port;
                 }

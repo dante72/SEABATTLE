@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using SeaBattleLib;
 
 namespace SeaBattleLib {
+    [Serializable]
     public enum Orientation { Horizontal, Vertical }
 
     public class Ship {
