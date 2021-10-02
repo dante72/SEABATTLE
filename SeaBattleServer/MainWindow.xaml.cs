@@ -47,6 +47,16 @@ namespace SeaBattleServer {
             TcpListener listener = new TcpListener(IPAddress.Parse(_ipAddress), _port);
             Title = $"IP = {_ipAddress} Port = {_port}";
             listener.Start();
+            ServeClients(listener);
+        }
+
+        private async void ServeClients(TcpListener listener) {
+            //while (true) {
+            //    if (_clients.Count == 2)
+            //        return;
+            //    TcpClient client = await listener.AcceptTcpClientAsync();
+            //    ServeClient(client);
+            //}
         }
     }
 }
