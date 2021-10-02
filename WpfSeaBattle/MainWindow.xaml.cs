@@ -39,8 +39,9 @@ namespace WpfSeaBattle {
         public MainWindow() {
             InitializeComponent();
 
-            field = new Field(10, 10);
-            enemyField = new Field(10, 10);
+            //field = new Field(10, 10);
+            field = Field.GenerateRandomField(10, 10);
+            enemyField = field;
             CreateFieldView(battleField1, field);
             CreateFieldView(battleField2, enemyField, true);
         }
