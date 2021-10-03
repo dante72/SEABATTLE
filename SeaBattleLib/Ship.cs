@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using SeaBattleLib;
 
 namespace SeaBattleLib {
-    [Serializable]
     public enum Orientation { Horizontal, Vertical }
 
+    [Serializable]
     public class Ship {
         public List<Cell> Location { get; } = new List<Cell>();
         public List<Cell> Area { get; } = new List<Cell>();

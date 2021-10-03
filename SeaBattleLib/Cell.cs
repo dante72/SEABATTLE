@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SeaBattleLib {
+    [Serializable]
     public class Cell : INotifyPropertyChanged {
         public event PropertyChangedEventHandler PropertyChanged;
 

@@ -113,13 +113,6 @@ namespace WpfSeaBattle {
                     else if (message == Message.GameStatus) {
                         buffer = await _server.ReadFromStream(1);
                         _gameStatus = (GameStatus)buffer[0];
-                        if (_gameStatus == GameStatus.GameOver) {
-                            buffer = await _server.ReadFromStream(4);
-                            buffer = await _server.ReadFromStream(BitConverter.ToInt32(buffer, 0));
-                            MessageBox.Show(Encoding.UTF8.GetString(buffer));
-                            BreakConnection();
-                            return;
-                        }
                     }
                     else if (message == Message.WhoseShot) {
 
@@ -139,6 +132,7 @@ namespace WpfSeaBattle {
                     else if (message == Message.ChatNotice) {
                         
                     }
+
                 }
             }
             catch (Exception ex) {
