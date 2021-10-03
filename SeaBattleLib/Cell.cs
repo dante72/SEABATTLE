@@ -40,6 +40,7 @@ namespace SeaBattleLib {
         public byte[] PointToByteArray() {
             MemoryStream stream = new MemoryStream();
             BinaryWriter writer = new BinaryWriter(stream);
+
             writer.Write((byte)Texture);
             writer.Write(X);
             writer.Write(Y);

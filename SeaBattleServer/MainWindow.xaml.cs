@@ -76,12 +76,40 @@ namespace SeaBattleServer {
                     byte message = buffer[0];
 
                     if (message == Message.Shot) {
+                        buffer = await player.Client.ReadFromStream(1);
+                        Textures texture = (Textures)buffer[0];
 
-                        
+                        buffer = await player.Client.ReadFromStream(4);
+                        int x = BitConverter.ToInt32(buffer, 0);
+
+                        buffer = await player.Client.ReadFromStream(4);
+                        int y = BitConverter.ToInt32(buffer, 0);
+
+                        Cell cell;
+
+                        foreach (PlayerData other in _players)
+                            if (other.PlayerWalks != player.PlayerWalks) {
+                                other.Field[y, x].Shoot();
+                                cell = other.Field[y, x];
+
+                            }
+
+                        //foreach (PlayerData other in _players)
+                        //    await SendMessageClient.SendMoveMessage(other, cell);
+
+                        _playerWalks = _playerWalks == PlayerWalks.PlayerOne ? PlayerWalks.PlayerTwo : PlayerWalks.PlayerOne;
+
+                        Dispatcher.Invoke(() => Logs.Add($"Сделал ход {player.Client.Client.RemoteEndPoint} {DateTime.Now}"));
+
                     }
 
                     else if (message == Message.ChatNotice) {
-                       
+                        buffer = await player.Client.ReadFromStream(4);
+                        buffer = await player.Client.ReadFromStream(BitConverter.ToInt32(buffer, 0));
+                        foreach (PlayerData other in _players)
+                            if (other.Client.Client.RemoteEndPoint != player.Client.Client.RemoteEndPoint)
+                                await SendMessageClient.SendChatNoticeMessage(other, buffer);
+                        Dispatcher.Invoke(() => Logs.Add($"Отправил сообщение в чат {player.Client.Client.RemoteEndPoint} {DateTime.Now}"));
                     }
 
                     //Рассылка статуса игры
@@ -118,11 +146,11 @@ namespace SeaBattleServer {
 
             if (_players.Count == 0) {
                 playerData = new PlayerData(client, Field.GenerateRandomField(10, 10), PlayerWalks.PlayerOne);
-                //Dispatcher.Invoke(() => Logs.Add($"Первый игрок {client.Client.RemoteEndPoint} {DateTime.Now}"));
+                Dispatcher.Invoke(() => Logs.Add($"Первый игрок {client.Client.RemoteEndPoint} {DateTime.Now}"));
             }
             else {
                 playerData = new PlayerData(client, Field.GenerateRandomField(10, 10), PlayerWalks.PlayerTwo);
-                //Dispatcher.Invoke(() => Logs.Add($"Второй игрок {client.Client.RemoteEndPoint} {DateTime.Now}"));
+                Dispatcher.Invoke(() => Logs.Add($"Второй игрок {client.Client.RemoteEndPoint} {DateTime.Now}"));
                 _gameStatus = GameStatus.GameIsOn;
             }
 
