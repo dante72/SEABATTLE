@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace SeaBattleServer {
     class PlayerData {
-        public PlayerData(TcpClient client, Field field, PlayerWalks playerWalks) {
+        public PlayerData(TcpClient client, Field field, CurrentPlayer currentPlayer) {
             Client = client;
             Field = field;
-            PlayerWalks = playerWalks;
+            CurrentPlayer = currentPlayer;
         }
 
         public TcpClient Client { get; }
         public Field Field { get; }
-        public PlayerWalks PlayerWalks { get; }
+        public CurrentPlayer CurrentPlayer { get; }
 
 
     }

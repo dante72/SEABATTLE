@@ -24,7 +24,7 @@ namespace WpfSeaBattle {
         private TcpClient _server;
         private string _ipAddress;
         private int _port;
-        private PlayerWalks _playerWalks;
+        private CurrentPlayer _currentPlayer;
         //private string _name;
         private GameStatus _gameStatus;
         //private string _chatMessage;

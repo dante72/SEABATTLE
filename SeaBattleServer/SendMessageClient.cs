@@ -16,7 +16,7 @@ namespace SeaBattleServer {
             BinaryFormatter formatterIn = new BinaryFormatter();
 
             writer.Write(Message.Сonnection);
-            writer.Write((byte)player.PlayerWalks);
+            writer.Write((byte)player.CurrentPlayer);
 
             formatterIn.Serialize(streamToSerialize, player.Field.Ships.ToArray());
             byte[] buffer = streamToSerialize.ToArray();
@@ -39,12 +39,12 @@ namespace SeaBattleServer {
             await player.Client.GetStream().WriteAsync(buffer, 0, buffer.Length);
         }
 
-        public static async Task SendWhoseShotMessage(PlayerData player, PlayerWalks playerWalks) {
+        public static async Task SendWhoseShotMessage(PlayerData player, CurrentPlayer currentPlayer) {
             MemoryStream stream = new MemoryStream();
             BinaryWriter writer = new BinaryWriter(stream);
 
             writer.Write(Message.WhoseShot);
-            writer.Write((byte)playerWalks);
+            writer.Write((byte)currentPlayer);
             byte[] buffer = stream.ToArray();
 
             await player.Client.GetStream().WriteAsync(buffer, 0, buffer.Length);
@@ -66,7 +66,7 @@ namespace SeaBattleServer {
             MemoryStream stream = new MemoryStream();
             BinaryWriter writer = new BinaryWriter(stream);
 
-            writer.Write(Message.);
+            writer.Write(Message.GameOver);
             byte[] buffer = Encoding.UTF8.GetBytes(textMessage);
             writer.Write(buffer.Length);
             writer.Write(buffer);

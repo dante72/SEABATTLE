@@ -26,13 +26,13 @@ namespace SeaBattleServer {
         private int _port;
         private IList<PlayerData> _players;
         public ObservableCollection<string> Logs { get; }
-        private PlayerWalks _playerWalks;
+        private CurrentPlayer _currentPlayer;
         private GameStatus _gameStatus;
 
         public MainWindow() {
             InitializeComponent();
             DataContext = this;
-            _playerWalks = PlayerWalks.PlayerOne;
+            _currentPlayer = CurrentPlayer.PlayerOne;
             _gameStatus = GameStatus.DidNotStart;
             _players = new List<PlayerData>();
         }
@@ -88,7 +88,7 @@ namespace SeaBattleServer {
                         Cell cell;
 
                         foreach (PlayerData other in _players)
-                            if (other.PlayerWalks != player.PlayerWalks) {
+                            if (other.CurrentPlayer != player.CurrentPlayer) {
                                 other.Field[y, x].Shoot();
                                 cell = other.Field[y, x];
 
@@ -97,7 +97,7 @@ namespace SeaBattleServer {
                         //foreach (PlayerData other in _players)
                         //    await SendMessageClient.SendMoveMessage(other, cell);
 
-                        _playerWalks = _playerWalks == PlayerWalks.PlayerOne ? PlayerWalks.PlayerTwo : PlayerWalks.PlayerOne;
+                        _currentPlayer = _currentPlayer == CurrentPlayer.PlayerOne ? CurrentPlayer.PlayerTwo : CurrentPlayer.PlayerOne;
 
                         Dispatcher.Invoke(() => Logs.Add($"Сделал ход {player.Client.Client.RemoteEndPoint} {DateTime.Now}"));
 
@@ -126,7 +126,7 @@ namespace SeaBattleServer {
                         }
                         //Отправка кто теперь ходит
                         foreach (PlayerData other in _players)
-                            await SendMessageClient.SendWhoseShotMessage(other, _playerWalks);
+                            await SendMessageClient.SendWhoseShotMessage(other, _currentPlayer);
                     }
                 }
             }
@@ -145,11 +145,11 @@ namespace SeaBattleServer {
             PlayerData playerData;
 
             if (_players.Count == 0) {
-                playerData = new PlayerData(client, Field.GenerateRandomField(10, 10), PlayerWalks.PlayerOne);
+                playerData = new PlayerData(client, Field.GenerateRandomField(10, 10), CurrentPlayer.PlayerOne);
                 Dispatcher.Invoke(() => Logs.Add($"Первый игрок {client.Client.RemoteEndPoint} {DateTime.Now}"));
             }
             else {
-                playerData = new PlayerData(client, Field.GenerateRandomField(10, 10), PlayerWalks.PlayerTwo);
+                playerData = new PlayerData(client, Field.GenerateRandomField(10, 10), CurrentPlayer.PlayerTwo);
                 Dispatcher.Invoke(() => Logs.Add($"Второй игрок {client.Client.RemoteEndPoint} {DateTime.Now}"));
                 _gameStatus = GameStatus.GameIsOn;
             }
@@ -159,8 +159,8 @@ namespace SeaBattleServer {
 
         private async Task ReportGameOver() {
             foreach (PlayerData other in _players) {
-                if (other.PlayerWalks == _playerWalks)
-                    await SendMessageClient.SendGameOverMessage(player, "Вы победили!");
+                if (other.CurrentPlayer == _currentPlayer)
+                    await SendMessageClient.SendGameOverMessage(other, "Вы победили!");
                 else
                     await SendMessageClient.SendGameOverMessage(other, "Вы проиграли!");
             }
