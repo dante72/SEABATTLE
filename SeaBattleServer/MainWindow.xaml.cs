@@ -94,8 +94,8 @@ namespace SeaBattleServer {
 
                             }
 
-                        //foreach (PlayerData other in _players)
-                        //    await SendMessageClient.SendMoveMessage(other, cell);
+                        foreach (PlayerData other in _players)
+                            await SendMessageClient.SendGameStatusMessage(other, _gameStatus);
 
                         _currentPlayer = _currentPlayer == CurrentPlayer.PlayerOne ? CurrentPlayer.PlayerTwo : CurrentPlayer.PlayerOne;
 

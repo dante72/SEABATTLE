@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
@@ -25,10 +26,11 @@ namespace WpfSeaBattle {
         private string _ipAddress;
         private int _port;
         private CurrentPlayer _currentPlayer;
+        private CurrentPlayer _player;
         //private string _name;
         private GameStatus _gameStatus;
-        //private string _chatMessage;
-        
+        private string _chatMessage;
+        public ObservableCollection<string> Chat { get; }
 
         public Field FieldWithShips { get; }
         public Field FieldWithShots { get; }
@@ -38,15 +40,13 @@ namespace WpfSeaBattle {
 
         public MainWindow() {
             InitializeComponent();
-
-            //field = new Field(10, 10);
-            field = Field.GenerateRandomField(10, 10);
-            enemyField = field;
-            CreateFieldView(battleField1, field);
-            CreateFieldView(battleField2, enemyField, true);
+            FieldWithShips = Field.GenerateRandomField(10, 10);
+            FieldWithShots = new Field(10, 10);
+            CreateFieldView(battleField1, FieldWithShots);
+            CreateFieldView(battleField2, FieldWithShips, true);
         }
 
-        static private void CreateFieldView(WrapPanel wp, Field field, bool fogOfWar = false) {
+        private void CreateFieldView(WrapPanel wp, Field field, bool fogOfWar = false) {
             for (int i = 0; i < field.VerticalItemsCount; i++)
                 for (int j = 0; j < field.HorizontalItemsCount; j++) {
                     var button = new ToggleButton();
@@ -61,7 +61,22 @@ namespace WpfSeaBattle {
                 }
         }
 
-        private static void Button_Click(object sender, RoutedEventArgs e) {
+        private void Button_Click(object sender, RoutedEventArgs e) {
+            if (!_server.Connected)
+                return;
+            if (_gameStatus == GameStatus.DidNotStart) {
+                MessageBox.Show("Игра еще не началась так как отстутствует второй игрок");
+                return;
+            }
+            if (_gameStatus == GameStatus.GameOver) {
+                MessageBox.Show("Игра завершилась!");
+                return;
+            }
+            if(_currentPlayer != _player) {
+                MessageBox.Show("Сейчас не ваш ход");
+                return;
+            }
+
             var button = e.Source as ToggleButton;
             var point = button.DataContext as SeaBattleLib.Cell;
             point.Shoot();
@@ -88,7 +103,8 @@ namespace WpfSeaBattle {
                     MessageBox.Show(ex.Message);
                 }
             }
-            await SendMessageServer.SendСonnectionMessage(_server);
+
+            await SendMessageServer.SendСonnectionMessage(_server, FieldWithShips);
             ListenToServer();
         }
 
@@ -100,22 +116,16 @@ namespace WpfSeaBattle {
                     byte message = buffer[0];
 
                     if (message == Message.Сonnection) {
-                        buffer = await _server.ReadFromStream(4);
-                        buffer = await _server.ReadFromStream(BitConverter.ToInt32(buffer, 0));
-
-                        BinaryFormatter formatterOut = new BinaryFormatter();
-                        MemoryStream stream = new MemoryStream(buffer);
-                        foreach (var ship in (List<Ship>)formatterOut.Deserialize(stream)) {
-                            FieldWithShips.Ships.Add(ship);
-                        }
-
+                        buffer = await _server.ReadFromStream(1);
+                        _player = (CurrentPlayer)buffer[0];
                     }
                     else if (message == Message.GameStatus) {
                         buffer = await _server.ReadFromStream(1);
                         _gameStatus = (GameStatus)buffer[0];
                     }
                     else if (message == Message.WhoseShot) {
-
+                        buffer = await _server.ReadFromStream(1);
+                        _currentPlayer = (CurrentPlayer)buffer[0];
                     }
                     else if (message == Message.Shot) {
                         buffer = await _server.ReadFromStream(1);
@@ -128,9 +138,13 @@ namespace WpfSeaBattle {
                         int y = BitConverter.ToInt32(buffer, 0);
 
                         Cell cell = new Cell(x, y, texture);
+
+                        //FieldWithShots[]
                     }
                     else if (message == Message.ChatNotice) {
-                        
+                        buffer = await _server.ReadFromStream(4);
+                        buffer = await _server.ReadFromStream(BitConverter.ToInt32(buffer, 0));
+                        Chat.Add(Encoding.UTF8.GetString(buffer));
                     }
 
                 }

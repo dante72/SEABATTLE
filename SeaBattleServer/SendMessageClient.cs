@@ -9,24 +9,24 @@ using System.Threading.Tasks;
 
 namespace SeaBattleServer {
     class SendMessageClient {
-        public static async Task SendСonnectionMessage(PlayerData player) {
-            MemoryStream streamToSend  = new MemoryStream();
-            MemoryStream streamToSerialize = new MemoryStream();
-            BinaryWriter writer = new BinaryWriter(streamToSend);
-            BinaryFormatter formatterIn = new BinaryFormatter();
+        //public static async Task SendСonnectionMessage(PlayerData player) {
+        //    MemoryStream streamToSend  = new MemoryStream();
+        //    MemoryStream streamToSerialize = new MemoryStream();
+        //    BinaryWriter writer = new BinaryWriter(streamToSend);
+        //    BinaryFormatter formatterIn = new BinaryFormatter();
 
-            writer.Write(Message.Сonnection);
-            writer.Write((byte)player.CurrentPlayer);
+        //    writer.Write(Message.Сonnection);
+        //    writer.Write((byte)player.CurrentPlayer);
 
-            formatterIn.Serialize(streamToSerialize, player.Field.Ships.ToArray());
-            byte[] buffer = streamToSerialize.ToArray();
-            writer.Write(buffer.Length);
-            writer.Write(buffer);
+        //    formatterIn.Serialize(streamToSerialize, player.Field.Ships.ToArray());
+        //    byte[] buffer = streamToSerialize.ToArray();
+        //    writer.Write(buffer.Length);
+        //    writer.Write(buffer);
 
-            buffer = streamToSend.ToArray();
+        //    buffer = streamToSend.ToArray();
 
-            await player.Client.GetStream().WriteAsync(buffer, 0, buffer.Length);
-        }
+        //    await player.Client.GetStream().WriteAsync(buffer, 0, buffer.Length);
+        //}
 
         public static async Task SendGameStatusMessage(PlayerData player, GameStatus gameStatus) {
             MemoryStream stream = new MemoryStream();
@@ -45,6 +45,17 @@ namespace SeaBattleServer {
 
             writer.Write(Message.WhoseShot);
             writer.Write((byte)currentPlayer);
+            byte[] buffer = stream.ToArray();
+
+            await player.Client.GetStream().WriteAsync(buffer, 0, buffer.Length);
+        }
+
+        public static async Task SendShotMessage(PlayerData player, Cell cell) {
+            MemoryStream stream = new MemoryStream();
+            BinaryWriter writer = new BinaryWriter(stream);
+            writer.Write(Message.Shot);
+
+            writer.Write(cell.CellToByteArray());
             byte[] buffer = stream.ToArray();
 
             await player.Client.GetStream().WriteAsync(buffer, 0, buffer.Length);

@@ -37,7 +37,7 @@ namespace SeaBattleLib {
         public static bool operator !=(Cell left, Cell right) => !(left == right);
 
 
-        public byte[] PointToByteArray() {
+        public byte[] CellToByteArray() {
             MemoryStream stream = new MemoryStream();
             BinaryWriter writer = new BinaryWriter(stream);
 
