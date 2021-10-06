@@ -32,21 +32,22 @@ namespace SeaBattleServer {
         public MainWindow() {
             InitializeComponent();
             DataContext = this;
+            Logs = new ObservableCollection<string>();
             _currentPlayer = CurrentPlayer.PlayerOne;
             _gameStatus = GameStatus.DidNotStart;
             _players = new List<PlayerData>();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e) {
-            //ConfigWindow dialog = new ConfigWindow();
-            //if (dialog.ShowDialog() == true) {
-            //    _ipAddress = dialog.IpAddress;
-            //    _port = dialog.Port;
-            //}
-            //else {
-            //    Close();
-            //    return;
-            //}
+            ConfigWindow dialog = new ConfigWindow();
+            if (dialog.ShowDialog() == true) {
+                _ipAddress = dialog.IpAddress;
+                _port = dialog.Port;
+            }
+            else {
+                Close();
+                return;
+            }
 
             TcpListener listener = new TcpListener(IPAddress.Parse(_ipAddress), _port);
             Title = $"IP = {_ipAddress} Port = {_port}";
@@ -59,57 +60,63 @@ namespace SeaBattleServer {
                 if (_players.Count == 2)
                     return;
                 TcpClient client = await listener.AcceptTcpClientAsync();
-                PlayerData player = NewPlayer(client);
-                lock (_players) {
-                    _players.Add(player);
-                }
-                await SendMessageClient.SendСonnectionMessage(player);
-
-                ServeClient(player);
+               
+                ServeClient(client);
             }
         }
 
-        private async void ServeClient(PlayerData player) {
+        private async void ServeClient(TcpClient client) {
             try {
                 while (true) {
-                    byte[] buffer = await player.Client.ReadFromStream(1);
+                    byte[] buffer = await client.ReadFromStream(1);
                     byte message = buffer[0];
 
-                    if (message == Message.Shot) {
-                        buffer = await player.Client.ReadFromStream(1);
+                    if (message == Message.Сonnection) {
+                        buffer = await client.ReadFromStream(4);
+                        buffer = await client.ReadFromStream(BitConverter.ToInt32(buffer, 0));
+
+                        BinaryFormatter formatterOut = new BinaryFormatter();
+                        MemoryStream stream = new MemoryStream(buffer);
+                        Ship[] ships = (Ship[])formatterOut.Deserialize(stream);
+                        await AddNewClient(client, new Field(10, 10, ships.ToList()));
+                    }
+
+                    else if (message == Message.Shot) {
+                        buffer = await client.ReadFromStream(1);
                         Textures texture = (Textures)buffer[0];
 
-                        buffer = await player.Client.ReadFromStream(4);
+                        buffer = await client.ReadFromStream(4);
                         int x = BitConverter.ToInt32(buffer, 0);
 
-                        buffer = await player.Client.ReadFromStream(4);
+                        buffer = await client.ReadFromStream(4);
                         int y = BitConverter.ToInt32(buffer, 0);
 
-                        Cell cell;
-
+                        Cell cell = new Cell(x, y, texture);
+                        MessageBox.Show($"x = {x}\n\ry = {y}\n\rtexture = {texture}");
                         foreach (PlayerData other in _players)
-                            if (other.CurrentPlayer != player.CurrentPlayer) {
-                                other.Field[y, x].Shoot();
-                                cell = other.Field[y, x];
-
+                            if (other.Client.Client.RemoteEndPoint != client.Client.RemoteEndPoint) {
+                                other.Field[x, y].Shoot();
+                                cell.Texture = other.Field[x, y].Texture;
                             }
-
+                        MessageBox.Show($"x = {x}\n\ry = {y}\n\rtexture = {cell.Texture}");
                         foreach (PlayerData other in _players)
-                            await SendMessageClient.SendGameStatusMessage(other, _gameStatus);
+                            await SendMessageClient.SendShotMessage(other, cell);
+
+                        //проверка есть ли целые палубы
 
                         _currentPlayer = _currentPlayer == CurrentPlayer.PlayerOne ? CurrentPlayer.PlayerTwo : CurrentPlayer.PlayerOne;
 
-                        Dispatcher.Invoke(() => Logs.Add($"Сделал ход {player.Client.Client.RemoteEndPoint} {DateTime.Now}"));
+                        Dispatcher.Invoke(() => Logs.Add($"Сделал ход {client.Client.RemoteEndPoint} {DateTime.Now}"));
 
                     }
 
                     else if (message == Message.ChatNotice) {
-                        buffer = await player.Client.ReadFromStream(4);
-                        buffer = await player.Client.ReadFromStream(BitConverter.ToInt32(buffer, 0));
+                        buffer = await client.ReadFromStream(4);
+                        buffer = await client.ReadFromStream(BitConverter.ToInt32(buffer, 0));
                         foreach (PlayerData other in _players)
-                            if (other.Client.Client.RemoteEndPoint != player.Client.Client.RemoteEndPoint)
+                            if (other.Client.Client.RemoteEndPoint != client.Client.RemoteEndPoint)
                                 await SendMessageClient.SendChatNoticeMessage(other, buffer);
-                        Dispatcher.Invoke(() => Logs.Add($"Отправил сообщение в чат {player.Client.Client.RemoteEndPoint} {DateTime.Now}"));
+                        Dispatcher.Invoke(() => Logs.Add($"Отправил сообщение в чат {client.Client.RemoteEndPoint} {DateTime.Now}"));
                     }
 
                     //Рассылка статуса игры
@@ -131,31 +138,33 @@ namespace SeaBattleServer {
                 }
             }
             catch (Exception) {
-                Dispatcher.Invoke(() => Logs.Add($"Покинул игру {player.Client.Client.RemoteEndPoint} {DateTime.Now}"));
+                Dispatcher.Invoke(() => Logs.Add($"Покинул игру {client.Client.RemoteEndPoint} {DateTime.Now}"));
                 foreach (PlayerData other in _players)
-                    if (other.Client.Client.RemoteEndPoint != player.Client.Client.RemoteEndPoint)
+                    if (other.Client.Client.RemoteEndPoint != client.Client.RemoteEndPoint)
                         await SendMessageClient.SendPlayerHasLeftGameMessage(other);
                 Close();
                 return;
             }
         }
 
-        private PlayerData NewPlayer(TcpClient client) {
 
+        private async Task AddNewClient(TcpClient client, Field field) {
             PlayerData playerData;
-
-            if (_players.Count == 0) {
-                playerData = new PlayerData(client, Field.GenerateRandomField(10, 10), CurrentPlayer.PlayerOne);
-                Dispatcher.Invoke(() => Logs.Add($"Первый игрок {client.Client.RemoteEndPoint} {DateTime.Now}"));
+            lock (_players) {
+                if (_players.Count == 0) {
+                    playerData = new PlayerData(client, field, CurrentPlayer.PlayerOne);
+                    Dispatcher.Invoke(() => Logs.Add($"Первый игрок {client.Client.RemoteEndPoint} {DateTime.Now}"));
+                }
+                else {
+                    playerData = new PlayerData(client, field, CurrentPlayer.PlayerTwo);
+                    Dispatcher.Invoke(() => Logs.Add($"Второй игрок {client.Client.RemoteEndPoint} {DateTime.Now}"));
+                    _gameStatus = GameStatus.GameIsOn;
+                }
+                _players.Add(playerData);
             }
-            else {
-                playerData = new PlayerData(client, Field.GenerateRandomField(10, 10), CurrentPlayer.PlayerTwo);
-                Dispatcher.Invoke(() => Logs.Add($"Второй игрок {client.Client.RemoteEndPoint} {DateTime.Now}"));
-                _gameStatus = GameStatus.GameIsOn;
-            }
-
-            return playerData;
+            await SendMessageClient.SendСonnectionMessage(playerData);
         }
+
 
         private async Task ReportGameOver() {
             foreach (PlayerData other in _players) {

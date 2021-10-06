@@ -16,11 +16,16 @@ namespace WpfSeaBattle {
             MemoryStream streamToSerialize = new MemoryStream();
             BinaryWriter writer = new BinaryWriter(streamToSend);
             BinaryFormatter formatterIn = new BinaryFormatter();
+            byte[] buffer;
 
             writer.Write(Message.Сonnection);
 
+            //buffer = Encoding.UTF8.GetBytes(name);
+            //writer.Write(buffer.Length);
+            //writer.Write(buffer);
+
             formatterIn.Serialize(streamToSerialize, field.Ships.ToArray());
-            byte[] buffer = streamToSerialize.ToArray();
+            buffer = streamToSerialize.ToArray();
             writer.Write(buffer.Length);
             writer.Write(buffer);
 
@@ -32,23 +37,13 @@ namespace WpfSeaBattle {
         public static async Task SendShotMessage(TcpClient server, Cell cell) {
             MemoryStream stream = new MemoryStream();
             BinaryWriter writer = new BinaryWriter(stream);
-            writer.Write(Message.Shot);
 
+            writer.Write(Message.Shot);
             writer.Write(cell.CellToByteArray());
             byte[] buffer = stream.ToArray();
 
             await server.GetStream().WriteAsync(buffer, 0, buffer.Length);
         }
 
-        public static async Task SendShotMessage(TcpClient server, Cell point) {
-            MemoryStream stream = new MemoryStream();
-            BinaryWriter writer = new BinaryWriter(stream);
-
-            writer.Write(Message.Shot);
-            writer.Write(point.CellToByteArray());
-            byte[] buffer = stream.ToArray();
-
-            await server.GetStream().WriteAsync(buffer, 0, buffer.Length);
-        }
     }
 }

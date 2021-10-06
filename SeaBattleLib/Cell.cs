@@ -47,5 +47,12 @@ namespace SeaBattleLib {
 
             return stream.ToArray();
         }
+
+        public void Shoot() {
+            if (Texture == Textures.Ship)
+                Texture = Textures.Destroyed;
+            else
+                Texture = Textures.Miss;
+        }
     }
 }
