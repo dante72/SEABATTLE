@@ -9,24 +9,17 @@ using System.Threading.Tasks;
 
 namespace SeaBattleServer {
     class SendMessageClient {
-        //public static async Task SendСonnectionMessage(PlayerData player) {
-        //    MemoryStream streamToSend  = new MemoryStream();
-        //    MemoryStream streamToSerialize = new MemoryStream();
-        //    BinaryWriter writer = new BinaryWriter(streamToSend);
-        //    BinaryFormatter formatterIn = new BinaryFormatter();
+        public static async Task SendСonnectionMessage(PlayerData player) {
+            MemoryStream stream = new MemoryStream();
+            BinaryWriter writer = new BinaryWriter(stream);
 
-        //    writer.Write(Message.Сonnection);
-        //    writer.Write((byte)player.CurrentPlayer);
+            writer.Write(Message.Сonnection);
+            writer.Write((byte)player.CurrentPlayer);
 
-        //    formatterIn.Serialize(streamToSerialize, player.Field.Ships.ToArray());
-        //    byte[] buffer = streamToSerialize.ToArray();
-        //    writer.Write(buffer.Length);
-        //    writer.Write(buffer);
+            byte[] buffer = stream.ToArray();
 
-        //    buffer = streamToSend.ToArray();
-
-        //    await player.Client.GetStream().WriteAsync(buffer, 0, buffer.Length);
-        //}
+            await player.Client.GetStream().WriteAsync(buffer, 0, buffer.Length);
+        }
 
         public static async Task SendGameStatusMessage(PlayerData player, GameStatus gameStatus) {
             MemoryStream stream = new MemoryStream();
