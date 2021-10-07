@@ -7,6 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ConfigWindow.xaml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Remove="ConfigWindow.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SeaBattleControlLibrary\SeaBattleControlLibrary.csproj" />
     <ProjectReference Include="..\SeaBattleLib\SeaBattleLib.csproj" />
   </ItemGroup>
 

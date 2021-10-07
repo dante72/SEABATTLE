@@ -18,6 +18,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SeaBattleLib;
+using SeaBattleControlLibrary;
 
 namespace WpfSeaBattle {
 
@@ -151,9 +152,9 @@ namespace WpfSeaBattle {
                         Cell cell = new Cell(x, y, texture);
 
                         if (_currentPlayer == _player)
-                            FieldWithShots[x, y] = cell;
+                            FieldWithShots[x, y].Texture = cell.Texture;
                         else
-                            FieldWithShips[x, y] = cell;
+                            FieldWithShips[x, y].Texture = cell.Texture;
 
 
                     }

@@ -9,7 +9,7 @@
         Height="180" 
         Width="380"
         MinHeight="180"
-        MinWidth="350">
+        MinWidth="350" Loaded="Window_Loaded" Closed="Window_Closed">
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Button.Margin" Value="10"/>
@@ -37,7 +37,7 @@
                     Click="cancelButton_Click"  
                     Content="Отмена"/>
         </UniformGrid>
-        <Grid>
+        <Grid x:Name="grid">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="3*"/>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
 
 namespace SeaBattleServer {
@@ -48,6 +49,11 @@ namespace SeaBattleServer {
                 return;
             }
             DialogResult = true;
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

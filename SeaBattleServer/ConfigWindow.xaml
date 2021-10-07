@@ -10,7 +10,7 @@
         Width="320"
         MinHeight="180"
         MinWidth="320"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterOwner" Loaded="Window_Loaded">
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Button.Margin" Value="10"/>

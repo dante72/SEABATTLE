@@ -18,6 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WpfSeaBattle;
 
 namespace SeaBattleServer {
 
@@ -39,7 +40,7 @@ namespace SeaBattleServer {
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e) {
-            ConfigWindow dialog = new ConfigWindow();
+            ConnectionWindow dialog = new ConnectionWindow(true);
             if (dialog.ShowDialog() == true) {
                 _ipAddress = dialog.IpAddress;
                 _port = dialog.Port;

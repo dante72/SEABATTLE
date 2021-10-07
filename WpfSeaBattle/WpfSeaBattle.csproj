@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SeaBattleControlLibrary\SeaBattleControlLibrary.csproj" />
     <ProjectReference Include="..\SeaBattleLib\SeaBattleLib.csproj" />
   </ItemGroup>
 
