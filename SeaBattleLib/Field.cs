@@ -7,8 +7,17 @@ using System.Threading.Tasks;
 namespace SeaBattleLib {
     public class Field {
         private Cell[,] _points;
-
-        public List<Ship> Ships { get; } = new List<Ship>();
+        private List<Ship> _ships = new List<Ship>();
+        public List<Ship> Ships 
+        { 
+            get { return _ships; }
+            set 
+            {
+                if (value != null)
+                    _ships = value;
+                ToDrawShips();
+            }
+        }
         public int VerticalItemsCount { get; }
         public int HorizontalItemsCount { get; }
         public Field(int verticalItemsCount, int horizontalItemsCount, List<Ship> ships = null) {
@@ -27,8 +36,18 @@ namespace SeaBattleLib {
 
 
             //ships.ForEach(ship => ship.Area.ForEach(p => points[p.X, p.Y].Texture = p.Texture));
-            Ships.ForEach(ship => ship.Location.ForEach(p => _points[p.X, p.Y].Texture = p.Texture));
+            //Ships.ForEach(ship => ship.Location.ForEach(p => _points[p.X, p.Y].Texture = p.Texture));
 
+        }
+
+        private void ToDrawShips()
+        {
+            Ships.ForEach(ship => ship.Location.ForEach(p => _points[p.X, p.Y].Texture = p.Texture));
+        }
+
+        private void ToDrawAreas()
+        {
+            Ships.ForEach(ship => ship.Area.ForEach(p => _points[p.X, p.Y].Texture = p.Texture));
         }
 
         public Cell this[int x, int y] {

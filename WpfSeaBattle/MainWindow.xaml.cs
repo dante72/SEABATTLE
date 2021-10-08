@@ -127,7 +127,7 @@ namespace WpfSeaBattle {
                         //BinaryFormatter formatterOut = new BinaryFormatter();
                         //MemoryStream stream = new MemoryStream(buffer);
                         //Ship[] ships = (Ship[])formatterOut.Deserialize(stream);
-                        //FieldWithShots = new Field(10, 10, ships.ToList());
+                        //var FieldWithShots = new Field(10, 10, ships.ToList());
                         //CreateFieldView(battleField1, FieldWithShots);
 
                     }
