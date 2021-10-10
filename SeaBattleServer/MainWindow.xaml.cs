@@ -103,7 +103,7 @@ namespace SeaBattleServer {
                         foreach (PlayerData other in _players)
                             await SendMessageClient.SendShotMessage(other, cell);
 
-                        if (opponent.Field.Ships.All(ship => ship.Location.All(deck => deck.Texture == Textures.Destroyed)))
+                        if(IsAllShipsDestroyed(opponent.Field))
                             _gameStatus = GameStatus.GameOver;
 
                         Dispatcher.Invoke(() => Logs.Add($"Сделал ход {client.Client.RemoteEndPoint} {DateTime.Now}"));
@@ -187,6 +187,15 @@ namespace SeaBattleServer {
                     player.Client.Client.Shutdown(SocketShutdown.Both);
                 player.Client.Client.Close();
             }
+        }
+
+        private bool IsAllShipsDestroyed(Field field) {
+            for (int i = 0; i < field.VerticalItemsCount; i++)
+                for (int j = 0; j < field.HorizontalItemsCount; j++)
+                    if (field[i, j].Texture == Textures.Ship)
+                        return false;
+            return true;    
+            
         }
     }
 }
