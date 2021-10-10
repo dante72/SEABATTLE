@@ -78,9 +78,14 @@
         </Viewbox>
         <DockPanel Grid.Column="1">
             <Button DockPanel.Dock="Bottom"
-                        Content="Отправить"/>
-            <TextBox DockPanel.Dock="Bottom"/>
-            <ListBox/>
+                    Padding="5"
+                    Content="Отправить"
+                    Click="SendToChat_Click"/>
+            <TextBox DockPanel.Dock="Bottom"
+                     x:Name="chatTextBox"/>
+            <ListBox ItemsSource="{Binding Chat}"
+                     ScrollViewer.CanContentScroll="True" 
+                     x:Name="listBox"/>
         </DockPanel>
     </Grid>
 

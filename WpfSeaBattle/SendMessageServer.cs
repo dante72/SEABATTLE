@@ -45,5 +45,18 @@ namespace WpfSeaBattle {
             await server.GetStream().WriteAsync(buffer, 0, buffer.Length);
         }
 
+        public static async Task SendChatNoticeMessage(TcpClient server, string textMessage) {
+            MemoryStream stream = new MemoryStream();
+            BinaryWriter writer = new BinaryWriter(stream);
+
+            writer.Write(Message.ChatNotice);
+            byte[] buffer = Encoding.UTF8.GetBytes(textMessage);
+            writer.Write(buffer.Length);
+            writer.Write(buffer);
+            buffer = stream.ToArray();
+
+            await server.GetStream().WriteAsync(buffer, 0, buffer.Length);
+        }
+
     }
 }

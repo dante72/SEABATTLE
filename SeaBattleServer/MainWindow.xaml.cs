@@ -26,7 +26,7 @@ namespace SeaBattleServer {
     public partial class MainWindow : Window {
         private string _ipAddress;
         private int _port;
-        private IList<PlayerData> _players;
+        private List<PlayerData> _players;
         public ObservableCollection<string> Logs { get; }
         private CurrentPlayer _currentPlayer;
         private GameStatus _gameStatus;
@@ -68,6 +68,8 @@ namespace SeaBattleServer {
         }
 
         private async void ServeClient(TcpClient client) {
+
+            
             try {
                 while (true) {
                     byte[] buffer = await client.ReadFromStream(1);
@@ -92,23 +94,21 @@ namespace SeaBattleServer {
 
                         buffer = await client.ReadFromStream(4);
                         int y = BitConverter.ToInt32(buffer, 0);
+                        PlayerData opponent = _players.Where(other => other.Client.Client.RemoteEndPoint != client.Client.RemoteEndPoint).First();
 
-                        Cell cell = new Cell(x, y, texture);
-
-                        foreach (PlayerData other in _players)
-                            if (other.Client.Client.RemoteEndPoint != client.Client.RemoteEndPoint) {
-                                other.Field[x, y].Shoot();
-                                cell.Texture = other.Field[x, y].Texture;
-                            }
-
+                        opponent.Field[x, y].Shoot();
+                        Cell cell = opponent.Field[x, y];
+                        if (opponent.Field[x, y].Texture != Textures.Destroyed)
+                            _currentPlayer = _currentPlayer == CurrentPlayer.PlayerOne ? CurrentPlayer.PlayerTwo : CurrentPlayer.PlayerOne;
+                        
 
                         foreach (PlayerData other in _players)
                             await SendMessageClient.SendShotMessage(other, cell);
 
-                        //проверка есть ли целые палубы
+                        if (opponent.Field.Ships.All(ship => ship.Location.All(deck => deck.Texture == Textures.Destroyed)))
+                            _gameStatus = GameStatus.GameOver;
 
-
-                        _currentPlayer = _currentPlayer == CurrentPlayer.PlayerOne ? CurrentPlayer.PlayerTwo : CurrentPlayer.PlayerOne;
+                        
 
                         Dispatcher.Invoke(() => Logs.Add($"Сделал ход {client.Client.RemoteEndPoint} {DateTime.Now}"));
 
@@ -117,9 +117,11 @@ namespace SeaBattleServer {
                     else if (message == Message.ChatNotice) {
                         buffer = await client.ReadFromStream(4);
                         buffer = await client.ReadFromStream(BitConverter.ToInt32(buffer, 0));
+                        Logs.Add(Encoding.UTF8.GetString(buffer));
                         foreach (PlayerData other in _players)
                             if (other.Client.Client.RemoteEndPoint != client.Client.RemoteEndPoint)
                                 await SendMessageClient.SendChatNoticeMessage(other, buffer);
+
                         Dispatcher.Invoke(() => Logs.Add($"Отправил сообщение в чат {client.Client.RemoteEndPoint} {DateTime.Now}"));
                     }
 
@@ -142,7 +144,8 @@ namespace SeaBattleServer {
                     }
                 }
             }
-            catch (Exception) {
+            catch (Exception ex) {
+                Dispatcher.Invoke(() => Logs.Add($"{ex.Message} {DateTime.Now}"));
                 Dispatcher.Invoke(() => Logs.Add($"Покинул игру {client.Client.RemoteEndPoint} {DateTime.Now}"));
                 //Отправка сообщения о потери связи с други игроком
                 foreach (PlayerData other in _players)

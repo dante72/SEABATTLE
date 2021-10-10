@@ -29,7 +29,6 @@ namespace WpfSeaBattle {
         private CurrentPlayer _player;
         private string _name;
         private GameStatus _gameStatus;
-        private string _chatMessage;
         public ObservableCollection<string> Chat { get; }
 
         public Field FieldWithShips { get; }
@@ -37,6 +36,9 @@ namespace WpfSeaBattle {
 
         public MainWindow() {
             InitializeComponent();
+            DataContext = this;
+            Chat = new ObservableCollection<string>();
+
             FieldWithShips = Field.GenerateRandomField(10, 10);
             FieldWithShots = new Field(10, 10);
             _gameStatus = GameStatus.DidNotStart;
@@ -72,31 +74,30 @@ namespace WpfSeaBattle {
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e) {
-            //while (true) {
-            //    ConnectionWindow dialog = new ConnectionWindow();
-            //    if (dialog.ShowDialog() == true) {
-            //        _name = dialog.PlayerName;
-            //        _ipAddress = dialog.IpAddress;
-            //        _port = dialog.Port;
-            //    }
-            //    else {
-            //        Close();
-            //        return;
-            //    }
+            while (true) {
+                ConnectionWindow dialog = new ConnectionWindow();
+                if (dialog.ShowDialog() == true) {
+                    _name = dialog.PlayerName;
+                    _ipAddress = dialog.IpAddress;
+                    _port = dialog.Port;
+                }
+                else {
+                    Close();
+                    return;
+                }
 
-            //    try {
-            //        _server = new TcpClient(_ipAddress, _port);
-            //        break;
-            //    }
-            //    catch (SocketException ex) {
-            //        MessageBox.Show(ex.Message);
-            //    }
-            //}
+                try {
+                    _server = new TcpClient(_ipAddress, _port);
+                    break;
+                }
+                catch (SocketException ex) {
+                    MessageBox.Show(ex.Message);
+                }
+            }
 
-            //await SendMessageServer.SendСonnectionMessage(_server, FieldWithShips);
-            //StringBuilder builder = new StringBuilder();
+            await SendMessageServer.SendСonnectionMessage(_server, FieldWithShips);
 
-            //ListenToServer();
+            ListenToServer();
         }
 
 
@@ -139,6 +140,9 @@ namespace WpfSeaBattle {
                         buffer = await _server.ReadFromStream(4);
                         buffer = await _server.ReadFromStream(BitConverter.ToInt32(buffer, 0));
                         Chat.Add(Encoding.UTF8.GetString(buffer));
+                        //Border border = (Border)VisualTreeHelper.GetChild(listBox, 0);
+                        //ScrollViewer scrollViewer = (ScrollViewer)VisualTreeHelper.GetChild(border, 0);
+                        //scrollViewer.ScrollToBottom();
                     }
                     else if (message == Message.GameOver || message == Message.PlayerHasLeftGame) {
                         buffer = await _server.ReadFromStream(4);
@@ -166,10 +170,24 @@ namespace WpfSeaBattle {
         }
 
         private void LockUnlockBattleField() {
-            if (_gameStatus == GameStatus.GameIsOn || _currentPlayer == _player)
+            if (_gameStatus == GameStatus.GameIsOn && _currentPlayer == _player)
                 battleField1.IsEnabled = true;
             else
                 battleField1.IsEnabled = false;
+        }
+
+        private async void SendToChat_Click(object sender, RoutedEventArgs e) {
+            if (!_server.Connected)
+                return;
+            if (string.IsNullOrEmpty(chatTextBox.Text))
+                return;
+            string textMessage = $"{_name}: {chatTextBox.Text}";
+            Chat.Add(textMessage);
+            //Border border = (Border)VisualTreeHelper.GetChild(listBox, 0);
+            //ScrollViewer scrollViewer = (ScrollViewer)VisualTreeHelper.GetChild(border, 0);
+            //scrollViewer.ScrollToBottom();
+            chatTextBox.Text = "";
+            await SendMessageServer.SendChatNoticeMessage(_server, textMessage);
         }
     }
 }
