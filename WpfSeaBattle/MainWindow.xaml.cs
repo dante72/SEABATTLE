@@ -140,14 +140,7 @@ namespace WpfSeaBattle {
                         buffer = await _server.ReadFromStream(BitConverter.ToInt32(buffer, 0));
                         Chat.Add(Encoding.UTF8.GetString(buffer));
                     }
-                    else if (message == Message.GameOver || message == Message.PlayerHasLeftGame) {
-                        buffer = await _server.ReadFromStream(4);
-                        buffer = await _server.ReadFromStream(BitConverter.ToInt32(buffer, 0));
-                        MessageBox.Show($"{Encoding.UTF8.GetString(buffer)}");
-                        BreakConnection();
-                        battleField1.IsEnabled = false;
-                        return;
-                    }
+
                     LockUnlockBattleField();
                 }
             }
@@ -163,15 +156,6 @@ namespace WpfSeaBattle {
             if (_server.Client.Connected)
                 _server.Client.Shutdown(SocketShutdown.Both);
             _server.Client.Close();
-        }
-
-        private void LockUnlockBattleField() {
-            if (_gameStatus == GameStatus.GameIsOn)
-                battleField1.IsEnabled = true;
-            if (_currentPlayer == _player)
-                battleField1.IsEnabled = true;
-            else
-                battleField1.IsEnabled = false;
         }
     }
 }
