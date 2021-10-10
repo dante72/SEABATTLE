@@ -8,6 +8,7 @@ using SeaBattleLib;
 namespace SeaBattleLib {
     public enum Orientation { Horizontal, Vertical }
 
+    [Serializable]
     public class Ship {
         public List<Cell> Location { get; } = new List<Cell>();
         public List<Cell> Area { get; } = new List<Cell>();
@@ -33,6 +34,12 @@ namespace SeaBattleLib {
                 }
         }
 
+
+        
+        
+        
+        
+        
         private static Random Random { get; } = new Random();
         public static Ship GenerateRandomShip(int verticalItemsCount, int horizontalItemsCount, int partCount = 1) =>
             new Ship(new Cell(Random.Next(horizontalItemsCount), Random.Next(verticalItemsCount)),
