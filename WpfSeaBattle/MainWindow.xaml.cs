@@ -121,15 +121,6 @@ namespace WpfSeaBattle {
                     if (message == Message.Сonnection) {
                         buffer = await _server.ReadFromStream(1);
                         _player = (CurrentPlayer)buffer[0];
-                        //buffer = await _server.ReadFromStream(4);
-                        //buffer = await _server.ReadFromStream(BitConverter.ToInt32(buffer, 0));
-
-                        //BinaryFormatter formatterOut = new BinaryFormatter();
-                        //MemoryStream stream = new MemoryStream(buffer);
-                        //Ship[] ships = (Ship[])formatterOut.Deserialize(stream);
-                        //var FieldWithShots = new Field(10, 10, ships.ToList());
-                        //CreateFieldView(battleField1, FieldWithShots);
-
                     }
                     else if (message == Message.GameStatus) {
                         buffer = await _server.ReadFromStream(1);

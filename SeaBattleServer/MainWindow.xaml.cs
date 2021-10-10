@@ -22,6 +22,8 @@ using WpfSeaBattle;
 
 namespace SeaBattleServer {
 
+
+
     public partial class MainWindow : Window {
         private string _ipAddress;
         private int _port;
@@ -93,17 +95,19 @@ namespace SeaBattleServer {
                         int y = BitConverter.ToInt32(buffer, 0);
 
                         Cell cell = new Cell(x, y, texture);
-                        MessageBox.Show($"x = {x}\n\ry = {y}\n\rtexture = {texture}");
+
                         foreach (PlayerData other in _players)
                             if (other.Client.Client.RemoteEndPoint != client.Client.RemoteEndPoint) {
                                 other.Field[x, y].Shoot();
                                 cell.Texture = other.Field[x, y].Texture;
                             }
-                        MessageBox.Show($"x = {x}\n\ry = {y}\n\rtexture = {cell.Texture}");
+
+
                         foreach (PlayerData other in _players)
                             await SendMessageClient.SendShotMessage(other, cell);
 
                         //проверка есть ли целые палубы
+
 
                         _currentPlayer = _currentPlayer == CurrentPlayer.PlayerOne ? CurrentPlayer.PlayerTwo : CurrentPlayer.PlayerOne;
 
@@ -127,6 +131,7 @@ namespace SeaBattleServer {
                     if (_gameStatus != GameStatus.DidNotStart && message != Message.ChatNotice) {
                         //Проверка закончилась ли игра
                         if (_gameStatus == GameStatus.GameOver) {
+                            //Рассылка сообщения об окончании игры и отключение всех клиентов
                             await ReportGameOver();
                             BreakConnection();
                             Close();
@@ -140,6 +145,7 @@ namespace SeaBattleServer {
             }
             catch (Exception) {
                 Dispatcher.Invoke(() => Logs.Add($"Покинул игру {client.Client.RemoteEndPoint} {DateTime.Now}"));
+                //Отправка сообщения о потери связи с други игроком
                 foreach (PlayerData other in _players)
                     if (other.Client.Client.RemoteEndPoint != client.Client.RemoteEndPoint)
                         await SendMessageClient.SendPlayerHasLeftGameMessage(other);
@@ -148,7 +154,7 @@ namespace SeaBattleServer {
             }
         }
 
-
+        //Добавление нового игрока
         private async Task AddNewClient(TcpClient client, Field field) {
             PlayerData playerData;
             lock (_players) {

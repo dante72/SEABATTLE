@@ -19,23 +19,6 @@ namespace SeaBattleServer {
             byte[] buffer = stream.ToArray();
 
             await player.Client.GetStream().WriteAsync(buffer, 0, buffer.Length);
-
-            //MemoryStream streamToSend = new MemoryStream();
-            //MemoryStream streamToSerialize = new MemoryStream();
-            //BinaryWriter writer = new BinaryWriter(streamToSend);
-            //BinaryFormatter formatterIn = new BinaryFormatter();
-            //byte[] buffer;
-
-            //writer.Write(Message.Сonnection);;
-
-            //formatterIn.Serialize(streamToSerialize, player.Field.Ships.ToArray());
-            //buffer = streamToSerialize.ToArray();
-            //writer.Write(buffer.Length);
-            //writer.Write(buffer);
-
-            //buffer = streamToSend.ToArray();
-
-            //await player.Client.GetStream().WriteAsync(buffer, 0, buffer.Length);
         }
 
         public static async Task SendGameStatusMessage(PlayerData player, GameStatus gameStatus) {
