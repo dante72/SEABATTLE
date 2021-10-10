@@ -21,8 +21,6 @@ using System.Windows.Shapes;
 
 namespace SeaBattleServer {
 
-
-
     public partial class MainWindow : Window {
         private string _ipAddress;
         private int _port;
@@ -107,8 +105,6 @@ namespace SeaBattleServer {
 
                         if (opponent.Field.Ships.All(ship => ship.Location.All(deck => deck.Texture == Textures.Destroyed)))
                             _gameStatus = GameStatus.GameOver;
-
-                        
 
                         Dispatcher.Invoke(() => Logs.Add($"Сделал ход {client.Client.RemoteEndPoint} {DateTime.Now}"));
 

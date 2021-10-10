@@ -45,6 +45,7 @@ namespace WpfSeaBattle {
             CreateFieldView(battleField1, FieldWithShots);
             CreateFieldView(battleField2, FieldWithShips, true);
             battleField1.IsEnabled = false;
+
         }
 
         private void CreateFieldView(WrapPanel wp, Field field, bool fogOfWar = false) {
@@ -64,11 +65,8 @@ namespace WpfSeaBattle {
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e) {
-            
-
             ToggleButton button = e.Source as ToggleButton;
             Cell cell = button.DataContext as Cell;
-            //cell.Shoot();
             await SendMessageServer.SendShotMessage(_server, cell);
 
         }
@@ -114,10 +112,20 @@ namespace WpfSeaBattle {
                     else if (message == Message.GameStatus) {
                         buffer = await _server.ReadFromStream(1);
                         _gameStatus = (GameStatus)buffer[0];
+                        if (_gameStatus == GameStatus.DidNotStart)
+                            gameStatusTextBlock.Text = "Статус игры: Игра не началась";
+                        else if(_gameStatus == GameStatus.GameIsOn)
+                            gameStatusTextBlock.Text = "Статус игры: Идет игра";
+                        else
+                            gameStatusTextBlock.Text = "Статус игры: Игра оконченна";
                     }
                     else if (message == Message.WhoseShot) {
                         buffer = await _server.ReadFromStream(1);
                         _currentPlayer = (CurrentPlayer)buffer[0];
+                        if (_currentPlayer == _player)
+                            whoseMoveTextBlock.Text = "Ход: Ваш";
+                        else
+                            whoseMoveTextBlock.Text = "Ход: Противника";
                     }
                     else if (message == Message.Shot) {
                         buffer = await _server.ReadFromStream(1);

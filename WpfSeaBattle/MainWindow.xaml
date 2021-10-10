@@ -61,28 +61,46 @@
             <ColumnDefinition Width="4*"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
-        <Viewbox Grid.Column="0">
-            <StackPanel Orientation="Horizontal">
-                <DockPanel>
-                    <TextBlock DockPanel.Dock="Top" 
+        <DockPanel Grid.Column="0">
+            <UniformGrid DockPanel.Dock="Bottom"
+                         Columns="2">
+                <TextBlock Text="Статус игры:"
+                           x:Name="gameStatusTextBlock"/>
+                <TextBlock Text="Ход:"
+                           x:Name="whoseMoveTextBlock"/>
+            </UniformGrid>
+            <Viewbox>
+                <StackPanel Orientation="Horizontal">
+                    <DockPanel>
+                        <TextBlock DockPanel.Dock="Top" 
                                    HorizontalAlignment="Center" 
-                                   Text="Флот противника"/>
-                    <WrapPanel Name="battleField1"/>
-                </DockPanel>
-                <DockPanel>
-                    <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" 
-                                   Text="Ваш флот"/>
-                    <WrapPanel Name="battleField2"/>
-                </DockPanel>
-            </StackPanel>
-        </Viewbox>
+                                   Text="Флот противника"
+                                   FontSize="25"/>
+                        <WrapPanel Name="battleField1"/>
+                    </DockPanel>
+                    <DockPanel>
+                        <TextBlock DockPanel.Dock="Top" 
+                                   HorizontalAlignment="Center" 
+                                   Text="Ваш флот"
+                                   FontSize="25"/>
+                        <WrapPanel Name="battleField2"/>
+                    </DockPanel>
+                </StackPanel>
+            </Viewbox>
+        </DockPanel>
+        
         <DockPanel Grid.Column="1">
+            <TextBlock DockPanel.Dock="Top" 
+                       HorizontalAlignment="Center"
+                       Text="Чат"/>
             <Button DockPanel.Dock="Bottom"
-                    Padding="5"
+                    Padding="7"
                     Content="Отправить"
+                    FontSize="17"
                     Click="SendToChat_Click"/>
             <TextBox DockPanel.Dock="Bottom"
-                     x:Name="chatTextBox"/>
+                     x:Name="chatTextBox"
+                     Padding="5"/>
             <ListBox ItemsSource="{Binding Chat}"
                      ScrollViewer.CanContentScroll="True" 
                      x:Name="listBox"/>
