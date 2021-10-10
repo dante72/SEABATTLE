@@ -45,6 +45,7 @@ namespace WpfSeaBattle {
         }
 
         private void CreateFieldView(WrapPanel wp, Field field, bool fogOfWar = false) {
+
             for (int i = 0; i < field.VerticalItemsCount; i++)
                 for (int j = 0; j < field.HorizontalItemsCount; j++) {
                     var button = new ToggleButton();
@@ -60,20 +61,7 @@ namespace WpfSeaBattle {
         }
 
         private async void Button_Click(object sender, RoutedEventArgs e) {
-            if (!_server.Connected)
-                return;
-            if (_gameStatus == GameStatus.DidNotStart) {
-                MessageBox.Show("Игра еще не началась так как отстутствует второй игрок");
-                return;
-            }
-            if (_gameStatus == GameStatus.GameOver) {
-                MessageBox.Show("Игра завершилась!");
-                return;
-            }
-            if (_currentPlayer != _player) {
-                MessageBox.Show("Сейчас не ваш ход");
-                return;
-            }
+            
 
             ToggleButton button = e.Source as ToggleButton;
             Cell cell = button.DataContext as Cell;
@@ -83,31 +71,31 @@ namespace WpfSeaBattle {
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e) {
-            while (true) {
-                ConnectionWindow dialog = new ConnectionWindow();
-                if (dialog.ShowDialog() == true) {
-                    _name = dialog.PlayerName;
-                    _ipAddress = dialog.IpAddress;
-                    _port = dialog.Port;
-                }
-                else {
-                    Close();
-                    return;
-                }
+            //while (true) {
+            //    ConnectionWindow dialog = new ConnectionWindow();
+            //    if (dialog.ShowDialog() == true) {
+            //        _name = dialog.PlayerName;
+            //        _ipAddress = dialog.IpAddress;
+            //        _port = dialog.Port;
+            //    }
+            //    else {
+            //        Close();
+            //        return;
+            //    }
 
-                try {
-                    _server = new TcpClient(_ipAddress, _port);
-                    break;
-                }
-                catch (SocketException ex) {
-                    MessageBox.Show(ex.Message);
-                }
-            }
+            //    try {
+            //        _server = new TcpClient(_ipAddress, _port);
+            //        break;
+            //    }
+            //    catch (SocketException ex) {
+            //        MessageBox.Show(ex.Message);
+            //    }
+            //}
 
-            await SendMessageServer.SendСonnectionMessage(_server, FieldWithShips);
-            StringBuilder builder = new StringBuilder();
+            //await SendMessageServer.SendСonnectionMessage(_server, FieldWithShips);
+            //StringBuilder builder = new StringBuilder();
 
-            ListenToServer();
+            //ListenToServer();
         }
 
 
@@ -145,15 +133,22 @@ namespace WpfSeaBattle {
                             FieldWithShots[x, y].Texture = cell.Texture;
                         else
                             FieldWithShips[x, y].Texture = cell.Texture;
-
-
                     }
                     else if (message == Message.ChatNotice) {
                         buffer = await _server.ReadFromStream(4);
                         buffer = await _server.ReadFromStream(BitConverter.ToInt32(buffer, 0));
                         Chat.Add(Encoding.UTF8.GetString(buffer));
                     }
+                    else if (message == Message.GameOver || message == Message.PlayerHasLeftGame) {
+                        buffer = await _server.ReadFromStream(4);
+                        buffer = await _server.ReadFromStream(BitConverter.ToInt32(buffer, 0));
+                        MessageBox.Show($"{Encoding.UTF8.GetString(buffer)}");
+                        BreakConnection();
+                        battleField1.IsEnabled = false;
+                        return;
+                    }
 
+                    LockUnlockBattleField();
                 }
             }
             catch (Exception ex) {
@@ -168,6 +163,22 @@ namespace WpfSeaBattle {
             if (_server.Client.Connected)
                 _server.Client.Shutdown(SocketShutdown.Both);
             _server.Client.Close();
+        }
+
+        private void LockUnlockBattleField() {
+            if (_gameStatus == GameStatus.DidNotStart) {
+                battleField1.IsEnabled = false;
+                MessageBox.Show("Игра еще не началась так как отстутствует второй игрок");
+                return;
+            }
+            if (_gameStatus == GameStatus.GameOver) {
+                MessageBox.Show("Игра завершилась!");
+                return;
+            }
+            if (_currentPlayer != _player) {
+                MessageBox.Show("Сейчас не ваш ход");
+                return;
+            }
         }
     }
 }

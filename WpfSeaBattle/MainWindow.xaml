@@ -51,8 +51,36 @@
             </Style.Triggers>
         </Style>
     </Window.Resources>
-    <StackPanel Orientation="Horizontal">
-        <WrapPanel Name="battleField1"/>
-        <WrapPanel Name="battleField2"/>
-    </StackPanel>
+    <DockPanel>
+        <Button DockPanel.Dock="Top"
+                Padding="5"
+                HorizontalAlignment="Right"
+                Content="Чат"/>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Viewbox Grid.Column="0">
+                <StackPanel Orientation="Horizontal">
+                    <DockPanel>
+                        <UniformGrid x:Name="vertical" DockPanel.Dock="Top"/>
+                        <UniformGrid DockPanel.Dock="Left"/>
+                        <WrapPanel Name="battleField1"/>
+                    </DockPanel>
+                    
+                    <WrapPanel Name="battleField2"/>
+                </StackPanel>
+            </Viewbox>
+            <DockPanel Grid.Column="1">
+                <Button DockPanel.Dock="Bottom"
+                        Content="Отправить"/>
+                <TextBox DockPanel.Dock="Bottom"/>
+                <ListBox/>
+            </DockPanel>
+        </Grid>
+    </DockPanel>
+   
+   
+    
 </Window>
