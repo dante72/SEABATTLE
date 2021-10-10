@@ -185,8 +185,10 @@ namespace WpfSeaBattle {
         }
 
         private async void SendToChat_Click(object sender, RoutedEventArgs e) {
-            if (!_server.Connected)
+            if (!_server.Connected) {
+                chatTextBox.Text = "";
                 return;
+            }
             if (string.IsNullOrEmpty(chatTextBox.Text))
                 return;
             string textMessage = $"{_name}: {chatTextBox.Text}";
