@@ -28,6 +28,21 @@ namespace WpfSeaBattle {
         private int _port;
         private CurrentPlayer _currentPlayer;
         private CurrentPlayer _player;
+        private CurrentPlayer CurrentPlayer
+        {
+            set{
+                _currentPlayer = value;
+                if (_player != _currentPlayer)
+                    battleField1.IsEnabled = false;
+                else
+                    battleField1.IsEnabled = true;
+
+            }
+            get
+            {
+                return _currentPlayer;
+            }
+        }
         private string _name;
         private GameStatus _gameStatus;
         private string _chatMessage;
@@ -128,7 +143,7 @@ namespace WpfSeaBattle {
                     }
                     else if (message == Message.WhoseShot) {
                         buffer = await _server.ReadFromStream(1);
-                        _currentPlayer = (CurrentPlayer)buffer[0];
+                        CurrentPlayer = (CurrentPlayer)buffer[0];
                     }
                     else if (message == Message.Shot) {
                         buffer = await _server.ReadFromStream(1);
@@ -142,7 +157,7 @@ namespace WpfSeaBattle {
 
                         Cell cell = new Cell(x, y, texture);
 
-                        if (_currentPlayer == _player)
+                        if (CurrentPlayer == _player)
                             FieldWithShots[x, y].Texture = cell.Texture;
                         else
                             FieldWithShips[x, y].Texture = cell.Texture;
