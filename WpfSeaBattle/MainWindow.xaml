@@ -8,7 +8,6 @@
         Title="MainWindow" Height="500" Width="900"
         Loaded="Window_Loaded">
     <Window.Resources>
-
         <local:IntToColorConverter x:Key="colorConverter"/>
         <Style TargetType="WrapPanel">
             <Setter Property="Width" Value="500"/>
