@@ -140,9 +140,9 @@ namespace WpfSeaBattle {
                         buffer = await _server.ReadFromStream(4);
                         buffer = await _server.ReadFromStream(BitConverter.ToInt32(buffer, 0));
                         Chat.Add(Encoding.UTF8.GetString(buffer));
-                        //Border border = (Border)VisualTreeHelper.GetChild(listBox, 0);
-                        //ScrollViewer scrollViewer = (ScrollViewer)VisualTreeHelper.GetChild(border, 0);
-                        //scrollViewer.ScrollToBottom();
+                        Border border = (Border)VisualTreeHelper.GetChild(listBox, 0);
+                        ScrollViewer scrollViewer = (ScrollViewer)VisualTreeHelper.GetChild(border, 0);
+                        scrollViewer.ScrollToBottom();
                     }
                     else if (message == Message.GameOver || message == Message.PlayerHasLeftGame) {
                         buffer = await _server.ReadFromStream(4);
@@ -183,9 +183,9 @@ namespace WpfSeaBattle {
                 return;
             string textMessage = $"{_name}: {chatTextBox.Text}";
             Chat.Add(textMessage);
-            //Border border = (Border)VisualTreeHelper.GetChild(listBox, 0);
-            //ScrollViewer scrollViewer = (ScrollViewer)VisualTreeHelper.GetChild(border, 0);
-            //scrollViewer.ScrollToBottom();
+            Border border = (Border)VisualTreeHelper.GetChild(listBox, 0);
+            ScrollViewer scrollViewer = (ScrollViewer)VisualTreeHelper.GetChild(border, 0);
+            scrollViewer.ScrollToBottom();
             chatTextBox.Text = "";
             await SendMessageServer.SendChatNoticeMessage(_server, textMessage);
         }
