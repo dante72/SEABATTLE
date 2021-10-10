@@ -8,12 +8,16 @@
         Title="MainWindow" Height="550" Width="900"
         Loaded="Window_Loaded">
     <Window.Resources>
-        
+
         <local:IntToColorConverter x:Key="colorConverter"/>
         <Style TargetType="WrapPanel">
-            <Setter Property="Width" Value="400"/>
-            <Setter Property="Height" Value="400"/>
+            <Setter Property="Width" Value="500"/>
+            <Setter Property="Height" Value="500"/>
             <Setter Property="Margin" Value="5"/>
+
+        </Style>
+        <Style TargetType="TextBlock">
+            <Setter Property="TextBlock.FontSize" Value="20"/>
         </Style>
         <Style TargetType="ToggleButton">
             <Setter Property="Template">
@@ -44,43 +48,43 @@
                 <Trigger Property="IsPressed" Value="True">
                     <Setter Property="Background" Value="Red"/>
                 </Trigger>
-                
+
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Opacity" Value="0.5"></Setter>
                 </Trigger>
             </Style.Triggers>
         </Style>
     </Window.Resources>
-    <DockPanel>
-        <Button DockPanel.Dock="Top"
-                Padding="5"
-                HorizontalAlignment="Right"
-                Content="Чат"/>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="4*"/>
-                <ColumnDefinition Width="1*"/>
-            </Grid.ColumnDefinitions>
-            <Viewbox Grid.Column="0">
-                <StackPanel Orientation="Horizontal">
-                    <DockPanel>
-                        <UniformGrid x:Name="vertical" DockPanel.Dock="Top"/>
-                        <UniformGrid DockPanel.Dock="Left"/>
-                        <WrapPanel Name="battleField1"/>
-                    </DockPanel>
-                    
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Viewbox Grid.Column="0">
+            <StackPanel Orientation="Horizontal">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" 
+                                   HorizontalAlignment="Center" 
+                                   Text="Флот противника"/>
+                    <WrapPanel Name="battleField1"/>
+                </DockPanel>
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Center" 
+                                   Text="Ваш флот"/>
                     <WrapPanel Name="battleField2"/>
-                </StackPanel>
-            </Viewbox>
-            <DockPanel Grid.Column="1">
-                <Button DockPanel.Dock="Bottom"
+                </DockPanel>
+            </StackPanel>
+        </Viewbox>
+        <DockPanel Grid.Column="1">
+            <Button DockPanel.Dock="Bottom"
                         Content="Отправить"/>
-                <TextBox DockPanel.Dock="Bottom"/>
-                <ListBox/>
-            </DockPanel>
-        </Grid>
-    </DockPanel>
-   
-   
-    
+            <TextBox DockPanel.Dock="Bottom"/>
+            <ListBox/>
+        </DockPanel>
+    </Grid>
+
+
+
+
 </Window>

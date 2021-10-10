@@ -170,7 +170,6 @@ namespace WpfSeaBattle {
                 battleField1.IsEnabled = true;
             else
                 battleField1.IsEnabled = false;
-            
         }
     }
 }
