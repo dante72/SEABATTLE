@@ -17,7 +17,7 @@ namespace WpfSeaBattle {
                 throw new InvalidCastException();
 
             switch ((Textures)value) {
-                case Textures.Ship: return Brushes.White;
+                case Textures.Deck: return Brushes.White;
                 case Textures.Water: return Brushes.LightBlue;
                 case Textures.Destroyed: return Brushes.DarkGray;
                 case Textures.Miss: return Brushes.LightCoral;

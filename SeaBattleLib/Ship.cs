@@ -18,7 +18,7 @@ namespace SeaBattleLib {
                 Location.Add(new Cell(
                                         head.X + (orientation == Orientation.Vertical ? i : 0),
                                         head.Y + (orientation == Orientation.Horizontal ? i : 0),
-                                        Textures.Ship
+                                        Textures.Deck
                                        )
                             );
             for (int i = head.X - 1; i < head.X + (orientation == Orientation.Vertical ? decksCount : 1) + 1; i++)

@@ -49,7 +49,7 @@ namespace SeaBattleLib {
         }
 
         public void Shoot() {
-            if (Texture == Textures.Ship)
+            if (Texture == Textures.Deck)
                 Texture = Textures.Destroyed;
             else
                 Texture = Textures.Miss;

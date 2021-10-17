@@ -193,7 +193,7 @@ namespace SeaBattleServer {
         private bool IsAllShipsDestroyed(Field field) {
             for (int i = 0; i < field.RowsCount; i++)
                 for (int j = 0; j < field.ColumnsCount ; j++)
-                    if (field[i, j].Texture == Textures.Ship)
+                    if (field[i, j].Texture == Textures.Deck)
                         return false;
             return true;    
             
