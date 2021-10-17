@@ -54,5 +54,19 @@ namespace SeaBattleLib {
             else
                 Texture = Textures.Miss;
         }
+
+        public override bool Equals(object other) {
+            Cell that = other as Cell;
+            if (that is null) return false;
+            if (this == that)return true;
+            else return true;
+        }
+
+        public override int GetHashCode() {
+            int hashX = X.GetHashCode();
+            int hashY = Y.GetHashCode();
+            int hashTexture = Texture.GetHashCode();
+            return hashX + hashY + hashTexture * 5;
+        }
     }
 }

@@ -8,6 +8,7 @@ namespace SeaBattleLib {
 
     public enum CurrentPlayer {None, PlayerOne, PlayerTwo }
     public enum GameStatus { DidNotStart, GameIsOn, GameOver }
+    public enum Textures { Ship, Water, Destroyed, Miss }
     public static class Message {
         public const byte Сonnection = 1;
         public const byte GameStatus = 2;
