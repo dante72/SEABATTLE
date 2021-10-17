@@ -13,7 +13,7 @@ namespace SeaBattleLib {
         public List<Cell> Location { get; } = new List<Cell>();
         public List<Cell> Area { get; } = new List<Cell>();
 
-        public Ship(Cell head, int decksCount, Orientation orientation = Orientation.Horizontal, int X = 10, int Y = 10) {
+        public Ship(Cell head, int decksCount, Orientation orientation, int rowsCount, int columnsCount) {
             for (int i = 0; i < decksCount; i++)
                 Location.Add(new Cell(
                                         head.X + (orientation == Orientation.Vertical ? i : 0),
@@ -25,7 +25,7 @@ namespace SeaBattleLib {
                 for (int j = head.Y - 1; j < head.Y + (orientation == Orientation.Horizontal ? decksCount : 1) + 1; j++) {
                     var point = new Cell(i, j, Textures.Miss);
                     if (!Location.Any(x => x == point))
-                        if (point.X >= 0 && point.X < X && point.Y >= 0 && point.Y < Y)
+                        if (point.X >= 0 && point.X < columnsCount && point.Y >= 0 && point.Y < rowsCount)
                             Area.Add(point);
                 }
         }
@@ -33,6 +33,6 @@ namespace SeaBattleLib {
         private static Random Random { get; } = new Random();
         public static Ship GenerateRandomShip(int rowsCount, int columnsCount, int decksCount = 1) =>
             new Ship(new Cell(Random.Next(columnsCount), Random.Next(rowsCount)),
-                decksCount, (Orientation)Random.Next(Enum.GetValues<Orientation>().Length));
+                decksCount, (Orientation)Random.Next(Enum.GetValues<Orientation>().Length), rowsCount, columnsCount);
     }
 }

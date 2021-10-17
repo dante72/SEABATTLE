@@ -156,6 +156,7 @@ namespace WpfSeaBattle {
                     else if (message == Message.GameOver || message == Message.PlayerHasLeftGame) {
                         buffer = await _server.ReadFromStream(4);
                         buffer = await _server.ReadFromStream(BitConverter.ToInt32(buffer, 0));
+                        
                         MessageBox.Show($"{Encoding.UTF8.GetString(buffer)}");
                         BreakConnection();
                         battleField1.IsEnabled = false;
