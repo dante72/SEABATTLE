@@ -31,7 +31,7 @@ namespace SeaBattleLib {
         }
 
         private static Random Random { get; } = new Random();
-        public static Ship GenerateRandomShip(int rowsCount, int columnsCount, int decksCount = 1) =>
+        public static Ship GenerateRandomShip(int rowsCount, int columnsCount, int decksCount) =>
             new Ship(new Cell(Random.Next(columnsCount), Random.Next(rowsCount)),
                 decksCount, (Orientation)Random.Next(Enum.GetValues<Orientation>().Length), rowsCount, columnsCount);
     }
