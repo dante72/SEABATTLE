@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SeaBattleLib {
 
-    public enum CurrentPlayer {None, PlayerOne, PlayerTwo }
+    public enum CurrentPlayer { None, PlayerOne, PlayerTwo }
     public enum GameStatus { DidNotStart, GameIsOn, GameOver }
     public enum Textures { Ship, Water, Destroyed, Miss }
     public static class Message {
