@@ -12,37 +12,27 @@ namespace SeaBattleLib {
     public class Ship {
         public List<Cell> Location { get; } = new List<Cell>();
         public List<Cell> Area { get; } = new List<Cell>();
-        public bool IsDestroyed { get; set; } = false;
 
-
-        public Ship(Cell head, int partCount = 1, Orientation orientation = Orientation.Horizontal, int X = 10, int Y = 10)
-        {
-            for (int i = 0; i < partCount; i++)
+        public Ship(Cell head, int decksCount, Orientation orientation = Orientation.Horizontal, int X = 10, int Y = 10) {
+            for (int i = 0; i < decksCount; i++)
                 Location.Add(new Cell(
                                         head.X + (orientation == Orientation.Vertical ? i : 0),
                                         head.Y + (orientation == Orientation.Horizontal ? i : 0),
                                         Textures.Ship
                                        )
                             );
-            for (int i = head.X - 1; i < head.X + (orientation == Orientation.Vertical ? partCount : 1) + 1; i++)
-                for (int j = head.Y - 1; j < head.Y + (orientation == Orientation.Horizontal ? partCount : 1) + 1; j++)
-                {
+            for (int i = head.X - 1; i < head.X + (orientation == Orientation.Vertical ? decksCount : 1) + 1; i++)
+                for (int j = head.Y - 1; j < head.Y + (orientation == Orientation.Horizontal ? decksCount : 1) + 1; j++) {
                     var point = new Cell(i, j, Textures.Miss);
                     if (!Location.Any(x => x == point))
-                        if ((point.X >= 0 && point.X < X) && (point.Y >= 0 && point.Y < Y))
+                        if (point.X >= 0 && point.X < X && point.Y >= 0 && point.Y < Y)
                             Area.Add(point);
                 }
         }
 
-
-        
-        
-        
-        
-        
         private static Random Random { get; } = new Random();
-        public static Ship GenerateRandomShip(int verticalItemsCount, int horizontalItemsCount, int partCount = 1) =>
-            new Ship(new Cell(Random.Next(horizontalItemsCount), Random.Next(verticalItemsCount)),
-                partCount, (Orientation)Random.Next(Enum.GetValues<Orientation>().Length));
+        public static Ship GenerateRandomShip(int rowsCount, int columnsCount, int decksCount = 1) =>
+            new Ship(new Cell(Random.Next(columnsCount), Random.Next(rowsCount)),
+                decksCount, (Orientation)Random.Next(Enum.GetValues<Orientation>().Length));
     }
 }

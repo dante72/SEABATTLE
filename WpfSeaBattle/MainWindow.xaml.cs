@@ -50,12 +50,12 @@ namespace WpfSeaBattle {
 
         private void CreateFieldView(WrapPanel wp, Field field, bool fogOfWar = false) {
 
-            for (int i = 0; i < field.VerticalItemsCount; i++)
-                for (int j = 0; j < field.HorizontalItemsCount; j++) {
+            for (int i = 0; i < field.RowsCount; i++)
+                for (int j = 0; j < field.ColumnsCount ; j++) {
                     var button = new ToggleButton();
 
-                    button.Width = wp.Height / field.VerticalItemsCount;
-                    button.Height = wp.Width / field.HorizontalItemsCount;
+                    button.Width = wp.Height / field.RowsCount;
+                    button.Height = wp.Width / field.ColumnsCount ;
                     button.IsChecked = fogOfWar;
                     button.DataContext = field[i, j];
                     button.Click += Button_Click;
@@ -74,6 +74,7 @@ namespace WpfSeaBattle {
         private async void Window_Loaded(object sender, RoutedEventArgs e) {
             while (true) {
                 ConnectionWindow dialog = new ConnectionWindow();
+                dialog.Owner = this;
                 if (dialog.ShowDialog() == true) {
                     _name = dialog.PlayerName;
                     _ipAddress = dialog.IpAddress;
