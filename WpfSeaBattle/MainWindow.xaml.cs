@@ -29,8 +29,8 @@ namespace WpfSeaBattle {
         private CurrentPlayer _player;
         private string _name;
         private GameStatus _gameStatus;
-        public ObservableCollection<string> Chat { get; }
 
+        public ObservableCollection<string> Chat { get; }
         public Field FieldWithShips { get; }
         public Field FieldWithShots { get; }
 
