@@ -13,9 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
 namespace WpfSeaBattle {
-    /// <summary>
-    /// Логика взаимодействия для ConnectionWindow.xaml
-    /// </summary>
+
     public partial class ConnectionWindow : Window {
         public string PlayerName { get; set; }
         public string IpAddress { get; set; }
