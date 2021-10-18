@@ -5,7 +5,7 @@ using System.Windows.Media;
 using SeaBattleLib;
 
 namespace WpfSeaBattle {
-    public class IntToColorConverter : IValueConverter {
+    public class TexturesToBrushConverter : IValueConverter {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
 
             if (value is null)

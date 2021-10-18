@@ -12,7 +12,7 @@
         MinWidth="800"
         Loaded="Window_Loaded">
     <Window.Resources>
-        <local:IntToColorConverter x:Key="colorConverter"/>
+        <local:TexturesToBrushConverter x:Key="colorConverter"/>
         <Style TargetType="WrapPanel">
             <Setter Property="Width" Value="500"/>
             <Setter Property="Height" Value="500"/>
