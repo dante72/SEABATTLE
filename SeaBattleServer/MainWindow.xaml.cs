@@ -51,7 +51,7 @@ namespace SeaBattleServer {
             }
 
             TcpListener listener = new TcpListener(IPAddress.Parse(_ipAddress), _port);
-            Title = $"IP = {_ipAddress} Port = {_port}";
+            Title = $"DEMO Server: IP = {_ipAddress} Port = {_port}";
             listener.Start();
             ServeClients(listener);
         }

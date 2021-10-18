@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SeaBattleServer"
         mc:Ignorable="d"
-        Title="DEMO SERVER" 
+        Title="DEMO Server:" 
         Height="450" 
         Width="800"
         MinHeight="400"
