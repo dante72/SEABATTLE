@@ -99,7 +99,6 @@ namespace WpfSeaBattle {
             ListenToServer();
         }
 
-
         private async void ListenToServer() {
             try {
                 while (true) {
