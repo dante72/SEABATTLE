@@ -25,9 +25,9 @@ namespace SeaBattleServer {
         private string _ipAddress;
         private int _port;
         private List<PlayerData> _players;
-        public ObservableCollection<string> Logs { get; }
         private CurrentPlayer _currentPlayer;
         private GameStatus _gameStatus;
+        public ObservableCollection<string> Logs { get; }
 
         public MainWindow() {
             InitializeComponent();
@@ -67,8 +67,6 @@ namespace SeaBattleServer {
         }
 
         private async void ServeClient(TcpClient client) {
-
-            
             try {
                 while (true) {
                     byte[] buffer = await client.ReadFromStream(1);
