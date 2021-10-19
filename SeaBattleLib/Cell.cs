@@ -58,9 +58,9 @@ namespace SeaBattleLib {
 
         public override bool Equals(object other) {
             Cell that = other as Cell;
-            if (that is null) return false;
-            if (this == that) return true;
-            else return false;
+            if (that is not null && this == that) 
+                return true;
+            return false;
         }
 
         public override int GetHashCode() {
