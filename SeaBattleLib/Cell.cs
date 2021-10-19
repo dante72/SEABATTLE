@@ -14,6 +14,7 @@ namespace SeaBattleLib {
         private void OnPropertyChanged(string status) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(status));
 
+
         public int X { get; }
         public int Y { get; }
 
@@ -58,8 +59,8 @@ namespace SeaBattleLib {
         public override bool Equals(object other) {
             Cell that = other as Cell;
             if (that is null) return false;
-            if (this == that)return true;
-            else return true;
+            if (this == that) return true;
+            else return false;
         }
 
         public override int GetHashCode() {
