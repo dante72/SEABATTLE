@@ -1,28 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
+using SeaBattleLib;
 
-namespace WpfSeaBattle
-{
-    public class IntToColorConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            switch((int)value)
-            {
-                case 0: return Brushes.LightBlue;
-                case 1: return Brushes.White;
+namespace WpfSeaBattle {
+    public class IntToColorConverter : IValueConverter {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
+
+            if (value is null)
+                return null;
+            if (!(value is Textures))
+                throw new ArgumentException($"Исходное значение должно иметь тип {nameof(value)}");
+
+            if (targetType != typeof(Brush))
+                throw new InvalidCastException();
+
+            switch ((Textures)value) {
+                case Textures.Ship: return Brushes.White;
+                case Textures.Water: return Brushes.LightBlue;
+                case Textures.Destroyed: return Brushes.DarkGray;
+                case Textures.Miss: return Brushes.LightCoral;
+                default: throw new ArgumentException();
             }
-            throw new NotImplementedException();
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
             throw new NotImplementedException();
         }
     }
