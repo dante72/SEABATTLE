@@ -9,7 +9,8 @@
         Height="180" 
         Width="380"
         MinHeight="180"
-        MinWidth="350">
+        MinWidth="350"
+        WindowStartupLocation="CenterOwner">
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Button.Margin" Value="10"/>

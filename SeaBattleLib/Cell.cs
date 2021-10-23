@@ -14,6 +14,7 @@ namespace SeaBattleLib {
         private void OnPropertyChanged(string status) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(status));
 
+
         public int X { get; }
         public int Y { get; }
 
@@ -49,10 +50,24 @@ namespace SeaBattleLib {
         }
 
         public void Shoot() {
-            if (Texture == Textures.Ship)
+            if (Texture == Textures.Deck)
                 Texture = Textures.Destroyed;
             else
                 Texture = Textures.Miss;
+        }
+
+        public override bool Equals(object other) {
+            Cell that = other as Cell;
+            if (that is not null && this == that) 
+                return true;
+            return false;
+        }
+
+        public override int GetHashCode() {
+            int hashX = X.GetHashCode();
+            int hashY = Y.GetHashCode();
+            int hashTexture = Texture.GetHashCode();
+            return hashX + hashY + hashTexture * 5;
         }
     }
 }

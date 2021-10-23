@@ -29,8 +29,8 @@ namespace WpfSeaBattle {
         private CurrentPlayer _player;
         private string _name;
         private GameStatus _gameStatus;
-        public ObservableCollection<string> Chat { get; }
 
+        public ObservableCollection<string> Chat { get; }
         public Field FieldWithShips { get; }
         public Field FieldWithShots { get; }
 
@@ -50,12 +50,12 @@ namespace WpfSeaBattle {
 
         private void CreateFieldView(WrapPanel wp, Field field, bool fogOfWar = false) {
 
-            for (int i = 0; i < field.VerticalItemsCount; i++)
-                for (int j = 0; j < field.HorizontalItemsCount; j++) {
+            for (int i = 0; i < field.RowsCount; i++)
+                for (int j = 0; j < field.ColumnsCount ; j++) {
                     var button = new ToggleButton();
 
-                    button.Width = wp.Height / field.VerticalItemsCount;
-                    button.Height = wp.Width / field.HorizontalItemsCount;
+                    button.Width = wp.Height / field.RowsCount;
+                    button.Height = wp.Width / field.ColumnsCount ;
                     button.IsChecked = fogOfWar;
                     button.DataContext = field[i, j];
                     button.Click += Button_Click;
@@ -74,6 +74,7 @@ namespace WpfSeaBattle {
         private async void Window_Loaded(object sender, RoutedEventArgs e) {
             while (true) {
                 ConnectionWindow dialog = new ConnectionWindow();
+                dialog.Owner = this;
                 if (dialog.ShowDialog() == true) {
                     _name = dialog.PlayerName;
                     _ipAddress = dialog.IpAddress;
@@ -97,7 +98,6 @@ namespace WpfSeaBattle {
 
             ListenToServer();
         }
-
 
         private async void ListenToServer() {
             try {
@@ -155,6 +155,7 @@ namespace WpfSeaBattle {
                     else if (message == Message.GameOver || message == Message.PlayerHasLeftGame) {
                         buffer = await _server.ReadFromStream(4);
                         buffer = await _server.ReadFromStream(BitConverter.ToInt32(buffer, 0));
+                        
                         MessageBox.Show($"{Encoding.UTF8.GetString(buffer)}");
                         BreakConnection();
                         battleField1.IsEnabled = false;
@@ -185,8 +186,10 @@ namespace WpfSeaBattle {
         }
 
         private async void SendToChat_Click(object sender, RoutedEventArgs e) {
-            if (!_server.Connected)
+            if (!_server.Connected) {
+                chatTextBox.Text = "";
                 return;
+            }
             if (string.IsNullOrEmpty(chatTextBox.Text))
                 return;
             string textMessage = $"{_name}: {chatTextBox.Text}";

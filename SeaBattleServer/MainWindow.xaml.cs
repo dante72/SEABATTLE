@@ -25,9 +25,9 @@ namespace SeaBattleServer {
         private string _ipAddress;
         private int _port;
         private List<PlayerData> _players;
-        public ObservableCollection<string> Logs { get; }
         private CurrentPlayer _currentPlayer;
         private GameStatus _gameStatus;
+        public ObservableCollection<string> Logs { get; }
 
         public MainWindow() {
             InitializeComponent();
@@ -40,6 +40,7 @@ namespace SeaBattleServer {
 
         private void Window_Loaded(object sender, RoutedEventArgs e) {
             ConfigWindow dialog = new ConfigWindow();
+            dialog.Owner = this;
             if (dialog.ShowDialog() == true) {
                 _ipAddress = dialog.IpAddress;
                 _port = dialog.Port;
@@ -50,7 +51,7 @@ namespace SeaBattleServer {
             }
 
             TcpListener listener = new TcpListener(IPAddress.Parse(_ipAddress), _port);
-            Title = $"IP = {_ipAddress} Port = {_port}";
+            Title = $"DEMO Server: IP = {_ipAddress} Port = {_port}";
             listener.Start();
             ServeClients(listener);
         }
@@ -66,8 +67,6 @@ namespace SeaBattleServer {
         }
 
         private async void ServeClient(TcpClient client) {
-
-            
             try {
                 while (true) {
                     byte[] buffer = await client.ReadFromStream(1);
@@ -190,9 +189,9 @@ namespace SeaBattleServer {
         }
 
         private bool IsAllShipsDestroyed(Field field) {
-            for (int i = 0; i < field.VerticalItemsCount; i++)
-                for (int j = 0; j < field.HorizontalItemsCount; j++)
-                    if (field[i, j].Texture == Textures.Ship)
+            for (int i = 0; i < field.RowsCount; i++)
+                for (int j = 0; j < field.ColumnsCount ; j++)
+                    if (field[i, j].Texture == Textures.Deck)
                         return false;
             return true;    
             

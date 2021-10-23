@@ -5,7 +5,7 @@ using System.Windows.Media;
 using SeaBattleLib;
 
 namespace WpfSeaBattle {
-    public class IntToColorConverter : IValueConverter {
+    public class TexturesToBrushConverter : IValueConverter {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
 
             if (value is null)
@@ -17,7 +17,7 @@ namespace WpfSeaBattle {
                 throw new InvalidCastException();
 
             switch ((Textures)value) {
-                case Textures.Ship: return Brushes.White;
+                case Textures.Deck: return Brushes.White;
                 case Textures.Water: return Brushes.LightBlue;
                 case Textures.Destroyed: return Brushes.DarkGray;
                 case Textures.Miss: return Brushes.LightCoral;

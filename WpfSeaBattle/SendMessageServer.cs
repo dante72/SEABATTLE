@@ -20,10 +20,6 @@ namespace WpfSeaBattle {
 
             writer.Write(Message.Сonnection);
 
-            //buffer = Encoding.UTF8.GetBytes(name);
-            //writer.Write(buffer.Length);
-            //writer.Write(buffer);
-
             formatterIn.Serialize(streamToSerialize, field.Ships.ToArray());
             buffer = streamToSerialize.ToArray();
             writer.Write(buffer.Length);
